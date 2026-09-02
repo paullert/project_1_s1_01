@@ -11,4 +11,5 @@ class LoginScene {
 
 
     //login button logic; pass through test API info - saved/ current cryptos
+    //and sends to Home Page
 }
