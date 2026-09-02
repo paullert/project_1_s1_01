@@ -1,5 +1,6 @@
 package com.example.cst438_team1_project1
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,12 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawContext
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.room3.Room
+import androidx.sqlite.driver.AndroidSQLiteDriver
+import com.example.cst438_team1_project1.data.AppDatabase
+import com.example.cst438_team1_project1.data.entity.User
+import kotlinx.coroutines.coroutineScope
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +52,10 @@ fun SignUpScreen() {
     var pass1 by remember { mutableStateOf("") }
     var pass2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+
+    var context = LocalContext.current
+    var coroutineScope = rememberCoroutineScope()
+    //got help from gemini with coroutine scope
 
     Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
 
@@ -100,6 +114,28 @@ fun SignUpScreen() {
                 return@Button
             }
 
+            /*
+            we use coroutine  so that users aren't waiting after button is clicked for
+            something to happen
+            UI runs on main thread
+            Database works on background thread
+            Coroutine is a safe way to switch between them
+            Button clicked -> lauch coroutine -> call suspend functions-> update UI
+             */
+            coroutineScope.launch{
+                val db = AppDatabase.getDatabase(context)
+                val userDao = db.userDao()
+                val existingUser = userDao.findByUsername(username)
+
+                if(existingUser != null){
+                    errorMessage = "Username already exisits."
+                    return@launch
+                }
+
+                val newUser = User(username = username, password = pass1)
+                userDao.insertUser(newUser)
+                //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
+            }
 
         }) {
             Text("SIGN UP!")
