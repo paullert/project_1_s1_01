@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.ViewCompat
@@ -49,7 +50,7 @@ fun SignUpScreen() {
         }
 
         Row(){
-            Text(text= errorMessage, fontSize = 14.sp)
+            Text(text= errorMessage, fontSize = 14.sp, color = Color.Red)
         }
 
         Row(){
