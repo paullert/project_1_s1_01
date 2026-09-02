@@ -1,7 +1,7 @@
 package com.example.cst438_team1_project1
 
 class LoginScene {
-    //created a login scene
+    //create a login scene
 
 
     //username logic
