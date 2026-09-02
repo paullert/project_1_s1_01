@@ -32,8 +32,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.room3.Room
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import com.example.cst438_team1_project1.data.AppDatabase
+import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
 import kotlinx.coroutines.coroutineScope
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +139,14 @@ fun SignUpScreen() {
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
                 //TODO make it so that it'll go to homepage screen after creating acc
+
+                // Example of how to call the Retrofit API:
+                try {
+                    val response = RetrofitClient.coinbaseApi.getExchangeRates("USD")
+                    Log.d("CoinbaseAPI", "Rates for USD: ${response.data.rates}")
+                } catch (e: Exception) {
+                    Log.e("CoinbaseAPI", "Error fetching rates", e)
+                }
             }
 
         }) {
