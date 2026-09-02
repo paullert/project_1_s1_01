@@ -81,7 +81,26 @@ fun SignUpScreen() {
             )
         }
 
-        Button(onClick = {}) {
+        Button(onClick = {
+            errorMessage = ""
+
+            if(username.isBlank()){
+                errorMessage = "Username cannot be blank."
+                return@Button
+            }
+
+            if(pass1.isBlank() || pass2.isBlank()){
+                errorMessage = "Password must be filled in."
+                return@Button
+            }
+
+            if(pass1 != pass2){
+                errorMessage = "Passwords must match."
+                return@Button
+            }
+
+
+        }) {
             Text("SIGN UP!")
         }
     }
