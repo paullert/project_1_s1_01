@@ -8,12 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.ViewCompat
@@ -31,6 +36,12 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun SignUpScreen() {
+
+    var username by remember { mutableStateOf("") }
+    var pass1 by remember { mutableStateOf("") }
+    var pass2 by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+
     Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
 
         Row(){
@@ -38,24 +49,45 @@ fun SignUpScreen() {
         }
 
         Row(){
-            Text("Choose a Username:")
-            TextField( value ="enter new username",
-                onValueChange = {},
-                )
+            Text(text= errorMessage, fontSize = 14.sp)
         }
 
         Row(){
+            Text("Choose a Username:")
+            TextField( value = username,
+                onValueChange = { username = it},
+                placeholder = { Text("username here.")}
+                )
+        }
+        /*
+        can find how to enter values into a text field from this link:
+        https://developer.android.com/develop/ui/compose/text/migrate-state-based
+        it talks about variable and mutableStateOf
+        */
+
+        Row(){
             Text("Choose a password:")
-            TextField( value ="enter password",
-                onValueChange = {},
+            TextField( value = pass1,
+                onValueChange = { pass1 = it},
+                placeholder = { Text("password here")}
             )
         }
 
         Row(){
             Text("Confirm password:")
-            TextField( value ="re-enter password",
-                onValueChange = {},
+            TextField( value = pass2,
+                onValueChange = { pass2 = it},
+                placeholder = {Text("enter same password")}
             )
         }
+
+        Button(onClick = {}) {
+            Text("SIGN UP!")
+        }
     }
+}
+
+@Composable
+fun HomePage() {
+    Text("Home Page TBD")
 }
