@@ -135,10 +135,21 @@ fun SignUpScreen() {
                 val newUser = User(username = username, password = pass1)
                 userDao.insertUser(newUser)
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
+
+                //TODO make it so that it'll go to homepage screen after creating acc
             }
 
         }) {
             Text("SIGN UP!")
+        }
+
+        Row() {
+            Text(text = "Already have an account?")
+        }
+
+        Button(onClick = {}){
+            Text(text = "LOGIN")
+            //TODO make it so that go to Login page
         }
     }
 }
