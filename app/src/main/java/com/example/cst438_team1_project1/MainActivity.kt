@@ -29,6 +29,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.composable
 import androidx.room3.Room
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import com.example.cst438_team1_project1.data.AppDatabase
@@ -40,13 +44,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent{
-            SignUpScreen()
+            val remNavController = rememberNavController()
+            NavHost(
+                navController = remNavController,
+                startDestination = "SignUp") //TODO: CHANGE startDestination to LOGIN Page when done
+            {
+                composable("SignUp"){
+                    SignUpScreen(remNavController)
+                }
+                composable("Home"){
+                    HomeScreen()
+                }
+                composable("Favorites"){
+                    FavoritesScreen()
+                }
+            }
         }
     }
 }
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
 
     var username by remember { mutableStateOf("") }
     var pass1 by remember { mutableStateOf("") }
@@ -137,6 +155,7 @@ fun SignUpScreen() {
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
                 //TODO make it so that it'll go to homepage screen after creating acc
+                navController.navigate("Home")
             }
 
         }) {
@@ -150,11 +169,35 @@ fun SignUpScreen() {
         Button(onClick = {}){
             Text(text = "LOGIN")
             //TODO make it so that go to Login page
+            //will look something like: navController.navigate("Login")
         }
     }
 }
 
 @Composable
-fun HomePage() {
-    Text("Home Page TBD")
+fun HomeScreen() { //will eventually also take a parameter for navController when complete
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text(text="WIP HOME PAGE", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        }
+
+        Row(){
+            Text(text="This will be the explore page where different coins are shown",
+                fontSize = 20.sp)
+        }
+    }
+}
+
+@Composable
+fun FavoritesScreen(){ //will eventually also take a parameter for navController when complete
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text("This will be for the user's favorite coins to see")
+        }
+    }
+}
+
+@Composable
+fun AccountScreen(){ //will eventually also take a parameter for navController when complete
+    //TODO: this is where the user will be able to Logout, Delete/Update password or username
 }
