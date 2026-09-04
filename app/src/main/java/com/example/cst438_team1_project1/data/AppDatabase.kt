@@ -4,8 +4,12 @@ import android.content.Context
 import androidx.room3.Database
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
+import com.example.cst438_team1_project1.data.Dao.CryptoCoinDao
+import com.example.cst438_team1_project1.data.Dao.SavePointDao
 import com.example.cst438_team1_project1.data.entity.User
 import com.example.cst438_team1_project1.data.Dao.UserDao
+import com.example.cst438_team1_project1.data.entity.CryptoCoin
+import com.example.cst438_team1_project1.data.entity.SavePoint
 
 /*
 This is the database itseld. Holds all tables.
@@ -16,12 +20,19 @@ https://developer.android.com/training/data-storage/room
  */
 
 @Database(
-    entities = [User::class],
-    version = 1
+    entities = [
+        User::class,
+        CryptoCoin::class,
+        SavePoint::class
+    ],
+    version = 1,
+    exportSchema = true
 )
 
 abstract class AppDatabase : RoomDatabase(){
     abstract fun userDao(): UserDao
+    abstract fun cryptoCoinDao(): CryptoCoinDao
+    abstract fun savePointDao(): SavePointDao
 
     //gemini helped with companion obj its needed for coroutine
     companion object {
