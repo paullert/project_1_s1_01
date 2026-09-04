@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    id("androidx.room3")
 }
 
 android {
@@ -42,8 +43,10 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.room3.common)
     implementation(libs.androidx.room3.runtime)
+    implementation(libs.core.ktx)
     ksp(libs.androidx.room3.compiler)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -64,7 +67,20 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.core.ktx)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     debugImplementation(libs.androidx.ui.tooling)
+
+    // TODO: ADDRESS LATER
+    androidTestImplementation(libs.androidx.room3.testing)
+    implementation(libs.androidx.sqlite.bundled)
+    testImplementation(libs.androidx.sqlite.jvm.bundled)
+}
+
+room3 {
+    schemaDirectory("$projectDir/schemas")
 }
