@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
+
 fun SignUpScreen(navController: NavController) {
 
     var username by remember { mutableStateOf("") }
