@@ -20,6 +20,7 @@ composeCompiler = "2.0.21"
 ksp = "2.0.21-1.0.25"
 room3Common = "3.0.2"
 room3Runtime = "3.0.2"
+navigationCompose = "2.10.0"
 
 # TODO: ADDRESS LATER
 room3Testing = "3.0.2"
@@ -49,6 +50,7 @@ androidx-foundation-layout = { group = "androidx.compose.foundation", name = "fo
 androidx-room3-common = { group = "androidx.room3", name = "room3-common", version.ref = "room3Common" }
 androidx-room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
 androidx-room3-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "room3Common" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 # TODO: ADDRESS LATER
 androidx-room3-testing = { group = "androidx.room3", name = "room3-testing", version.ref = "room3Testing" }

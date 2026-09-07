@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.cst438_team1_project1"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.cst438_team1_project1"
@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.room3.common)
     implementation(libs.androidx.room3.runtime)
