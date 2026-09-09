@@ -291,7 +291,9 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun AccountScreen(navController: NavController) {
-
+        val context = LocalContext.current
+        val sessionManager = remember { SessionManager(context) }
+        val coroutineScope = rememberCoroutineScope()
         Column(
             modifier = Modifier.fillMaxSize().padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -345,7 +347,22 @@ class MainActivity : AppCompatActivity() {
                 }) {
                     Text("Account")
                 }
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            sessionManager.removeUserId()
+                            navController.navigate("login") {
+                                popUpTo(0)
+                            }
+                        }
+                    }
+                ) {
+                    Text("Logout")
+                }
             }
+
+
         }
 
     }
