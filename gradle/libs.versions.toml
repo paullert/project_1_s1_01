@@ -20,7 +20,8 @@ composeCompiler = "2.0.21"
 ksp = "2.0.21-1.0.25"
 room3Common = "3.0.2"
 room3Runtime = "3.0.2"
-navigationCompose = "2.10.0"
+navigationCompose = "2.9.5"
+#changed from 2.10.0 to sync with Gradle
 
 # TODO: ADDRESS LATER
 room3Testing = "3.0.2"

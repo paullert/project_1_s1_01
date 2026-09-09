@@ -40,6 +40,10 @@ import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
 import kotlinx.coroutines.coroutineScope
 import android.util.Log
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +53,11 @@ class MainActivity : AppCompatActivity() {
             val remNavController = rememberNavController()
             NavHost(
                 navController = remNavController,
-                startDestination = "SignUp") //TODO: CHANGE startDestination to LOGIN Page when done
+                startDestination = "Login") //TODO: CHANGE startDestination to LOGIN Page when done
             {
+                composable("Login"){
+                    LoginScreen(remNavController)
+                }
                 composable("SignUp"){
                     SignUpScreen(remNavController)
                 }
@@ -64,6 +71,82 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+@Composable
+fun LoginScreen(navcontroller : NavController){
+
+
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+
+
+        Row(){
+            Text("Login Screen!", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+        }
+
+
+        Spacer(modifier = Modifier.height(100.dp))
+
+
+
+
+        Row(){
+            TextField( value = username,
+                onValueChange = { username = it},
+                placeholder = { Text("username", fontSize = 25.sp, fontWeight = FontWeight.Bold)}
+            )
+        }
+
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+        Row(){
+            TextField( value = username,
+                onValueChange = { username = it},
+                placeholder = { Text("password", fontSize = 25.sp, fontWeight = FontWeight.Bold)}
+            )
+        }
+
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+
+        Row(){
+            Button(onClick = {
+                //scene change logic
+
+
+            }) {Text("login", fontSize = 25.sp, fontWeight = FontWeight.Bold) }
+        }
+
+
+        Spacer(modifier = Modifier.height(200.dp))
+
+
+
+
+        Row(){
+            Button(onClick = {
+                //navigate to signUp screen logic
+
+
+            }) {Text("Create account", fontSize = 25.sp, fontWeight = FontWeight.Bold) }
+        }
+
+
+
+
+
+
+    }
+}
+
+
 
 @Composable
 
