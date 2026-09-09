@@ -45,15 +45,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import com.example.cst438_team1_project1.data.SessionManager
 import kotlinx.coroutines.flow.first
+import org.junit.Test
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
         setContent {
 
             Surface(modifier = Modifier.fillMaxSize(),
-                color = Color.White) {
+                color = Color.White) { //screen was black so added default background color
                 val remNavController = rememberNavController()
 
                 NavHost(
@@ -438,4 +439,91 @@ fun ChangeUsernameScreen(navController: NavController) {
 @Composable
 fun ChangePasswordScreen(navController: NavController) {
     Text("CHANGE PASSWORD PAGE")
+
+    var newPass by remember { mutableStateOf("") }
+    var confirmPass by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var errorMessage by remember { mutableStateOf("") }
+
+    val sessionManager = SessionManager(context)
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("CHANGE PASSWORD PAGE", fontSize = 30.sp)
+
+        if (errorMessage.isNotBlank()) {
+            Text(text = errorMessage, fontSize = 14.sp, color = Color.Red)
+        }
+
+        Row() {
+            Text(text = "Password: ", fontSize = 14.sp)
+
+            TextField(
+                value = newPass,
+                onValueChange = {
+                    newPass = it
+                },
+                placeholder = {
+                    Text("Enter new username")
+                }
+            )
+        }
+
+        Row() {
+            Text(text = "Confirm password: ", fontSize = 14.sp)
+            TextField(
+                value = confirmPass,
+                onValueChange = {
+                    confirmPass = it
+                },
+                placeholder = {
+                    Text("Confirm new password")
+                })
+        }
+
+        Button(onClick = {
+
+            errorMessage = ""
+
+            val passText = newPass
+            val confirmText = confirmPass
+
+            if (passText.isBlank() || confirmText.isBlank()) {
+                errorMessage = "Password must be filled in."
+                return@Button
+            }
+
+            if (passText != confirmText) {
+                errorMessage = "Passwords must match."
+                return@Button
+            }
+
+            coroutineScope.launch {
+                val savedUserId = sessionManager.readUserId.first()
+
+                if (savedUserId == null) {
+                    errorMessage = "No Logged in user found"
+                    return@launch
+                }
+
+                val db = AppDatabase.getDatabase(context)
+                val dao = db.userDao()
+                dao.updatePassword(savedUserId, passText)
+                navController.popBackStack()
+            }
+
+
+        }) {
+            Text(text = "Change Password")
+        }
+
+        Button(onClick = {
+            navController.popBackStack()
+        }) {
+            Text("Cancel")
+        }
+    }
 }
