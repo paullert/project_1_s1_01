@@ -1,6 +1,5 @@
 package com.example.cst438_team1_project1
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,31 +21,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawContext
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.room3.Room
-import androidx.sqlite.driver.AndroidSQLiteDriver
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.composable
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.entity.User
-import kotlinx.coroutines.coroutineScope
+import android.util.Log
+import com.example.cst438_team1_project1.data.api.RetrofitClient
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent{
-            SignUpScreen()
+            val remNavController = rememberNavController()
+            NavHost(
+                navController = remNavController,
+                startDestination = "SignUp") //TODO: CHANGE startDestination to LOGIN Page when done
+            {
+                composable("SignUp"){
+                    SignUpScreen(remNavController)
+                }
+                composable("Home"){
+                    HomeScreen(remNavController)
+                }
+                composable("Favorites"){
+                    FavoritesScreen()
+                }
+            }
         }
     }
 }
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
 
     var username by remember { mutableStateOf("") }
     var pass1 by remember { mutableStateOf("") }
@@ -55,7 +67,6 @@ fun SignUpScreen() {
 
     var context = LocalContext.current
     var coroutineScope = rememberCoroutineScope()
-    //got help from gemini with coroutine scope
 
     Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
 
@@ -72,13 +83,9 @@ fun SignUpScreen() {
             TextField( value = username,
                 onValueChange = { username = it},
                 placeholder = { Text("username here.")}
-                )
+            )
         }
-        /*
-        can find how to enter values into a text field from this link:
-        https://developer.android.com/develop/ui/compose/text/migrate-state-based
-        it talks about variable and mutableStateOf
-        */
+
 
         Row(){
             Text("Choose a password:")
@@ -114,14 +121,6 @@ fun SignUpScreen() {
                 return@Button
             }
 
-            /*
-            we use coroutine  so that users aren't waiting after button is clicked for
-            something to happen
-            UI runs on main thread
-            Database works on background thread
-            Coroutine is a safe way to switch between them
-            Button clicked -> lauch coroutine -> call suspend functions-> update UI
-             */
             coroutineScope.launch{
                 val db = AppDatabase.getDatabase(context)
                 val userDao = db.userDao()
@@ -134,9 +133,15 @@ fun SignUpScreen() {
 
                 val newUser = User(username = username, password = pass1)
                 userDao.insertUser(newUser)
-                //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
-                //TODO make it so that it'll go to homepage screen after creating acc
+                navController.navigate("Home")
+
+                try {
+                    val response = RetrofitClient.coinbaseApi.getExchangeRates("USD")
+                    Log.d("CoinbaseAPI", "Rates for USD: ${response.data.rates}")
+                } catch (e: Exception) {
+                    Log.e("CoinbaseAPI", "Error fetching rates", e)
+                }
             }
 
         }) {
@@ -149,12 +154,49 @@ fun SignUpScreen() {
 
         Button(onClick = {}){
             Text(text = "LOGIN")
-            //TODO make it so that go to Login page
+        }
+    }
+}
+
+
+
+@Composable
+fun HomeScreen(navController: NavController) {
+    var context = LocalContext.current;
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text(text="WIP HOME PAGE", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+        }
+
+        Row(){
+            Text(text="This will be the explore page where different coins are shown",
+                fontSize = 20.sp)
+        }
+
+        Button(onClick = {
+            //TODO: FINISH LOG OUT PAGE ONCE ACCOUNT PAGE IS MADE
+
+
+
+
+
+            navController.navigate("SignUp")
+
+        }) {
+            Text("LOG OUT!")
         }
     }
 }
 
 @Composable
-fun HomePage() {
-    Text("Home Page TBD")
+fun FavoritesScreen(){
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text("This will be for the user's favorite coins to see")
+        }
+    }
+}
+
+@Composable
+fun AccountScreen(){
 }
