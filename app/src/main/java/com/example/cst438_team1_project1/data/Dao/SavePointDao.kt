@@ -21,7 +21,7 @@ interface SavePointDao {
     suspend fun updateSavePoint(save: SavePoint)
     // Could be used later on, we'll see
 
-    @Query("SELECT * FROM save_points WHERE saved_point_id = :userId LIMIT 1")
+    @Query("SELECT * FROM save_points WHERE saved_point_id = :savePointId LIMIT 1")
     suspend fun findBySaveId(savePointId: Int) : SavePoint?
     // Could be used to inspect/magnify 1 specific crypto point
 
