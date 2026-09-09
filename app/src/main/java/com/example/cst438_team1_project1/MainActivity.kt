@@ -40,6 +40,8 @@ import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
 import kotlinx.coroutines.coroutineScope
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,10 +57,13 @@ class MainActivity : AppCompatActivity() {
                     SignUpScreen(remNavController)
                 }
                 composable("Home"){
-                    HomeScreen()
+                    HomeScreen(remNavController)
                 }
                 composable("Favorites"){
-                    FavoritesScreen()
+                    FavoritesScreen(remNavController)
+                }
+                composable("Account"){
+                    AccountScreen(remNavController)
                 }
             }
         }
@@ -185,7 +190,7 @@ fun SignUpScreen(navController: NavController) {
 }
 
 @Composable
-fun HomeScreen() { //will eventually also take a parameter for navController when complete
+fun HomeScreen(navController: NavController) { //will eventually also take a parameter for navController when complete
     Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
         Row(){
             Text(text="WIP HOME PAGE", fontSize = 30.sp, fontWeight = FontWeight.Bold)
@@ -196,18 +201,93 @@ fun HomeScreen() { //will eventually also take a parameter for navController whe
                 fontSize = 20.sp)
         }
     }
-}
 
-@Composable
-fun FavoritesScreen(){ //will eventually also take a parameter for navController when complete
-    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
-        Row(){
-            Text("This will be for the user's favorite coins to see")
+    //NAVIGATION BAR
+    Row(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment =  Alignment.Bottom) {
+        Column() {
+            Button(onClick = {navController.navigate("Home") }) {
+                Text("Home")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("Favorites")
+            }) {
+                Text("Favorites")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("account")
+            }) {
+                Text("Account")
+            }
         }
     }
 }
 
 @Composable
-fun AccountScreen(){ //will eventually also take a parameter for navController when complete
+fun FavoritesScreen(navController: NavController){ //will eventually also take a parameter for navController when complete
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text("This will be for the user's favorite coins to see")
+        }
+    }
+
+    //NAVIGATION BAR
+    Row(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment =  Alignment.Bottom) {
+        Column() {
+            Button(onClick = {navController.navigate("Home") }) {
+                Text("Home")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("Favorites")
+            }) {
+                Text("Favorites")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("account")
+            }) {
+                Text("Account")
+            }
+        }
+    }
+}
+
+@Composable
+fun AccountScreen(navController: NavController){ //will eventually also take a parameter for navController when complete
     //TODO: this is where the user will be able to Logout, Delete/Update password or username
+
+    //NAVIGATION BAR
+    Row(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment =  Alignment.Bottom) {
+        Column() {
+            Button(onClick = {navController.navigate("Home") }) {
+                Text("Home")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("Favorites")
+            }) {
+                Text("Favorites")
+            }
+        }
+        Column() {
+            Button(onClick = {
+                navController.navigate("account")
+            }) {
+                Text("Account")
+            }
+        }
+    }
 }
