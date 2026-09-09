@@ -411,7 +411,7 @@ fun ChangeUsernameScreen(navController: NavController) {
                         val userDao = db.userDao()
                         val existingUser = userDao.findByUsername(newUsername)
 
-                        if (existingUser != null && existingUser.id != savedUserId) {
+                        if (existingUser != null && existingUser.userId != savedUserId) {
                             errorMessage = "Username already exists."
                             return@launch
                         }

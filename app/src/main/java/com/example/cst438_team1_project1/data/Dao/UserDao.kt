@@ -22,10 +22,10 @@ interface UserDao {
     suspend fun findByUsername(username: String) : User?
     //^^ find the user whose user name matched and it will return 1 user or if user dne it'll return null
 
-    @Query("UPDATE user SET username = :newUsername WHERE id = :id")
+    @Query("UPDATE user SET username = :newUsername WHERE userId = :id")
     suspend fun updateUsername(id: Int, newUsername: String)
 
-    @Query("UPDATE user SET password = :newPass WHERE id = :id")
+    @Query("UPDATE user SET password = :newPass WHERE userId = :id")
     suspend fun updatePassword(id: Int, newPass: String)
 
     @Delete
