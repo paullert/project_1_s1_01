@@ -42,6 +42,7 @@ import kotlinx.coroutines.coroutineScope
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
+import com.example.cst438_team1_project1.data.SessionManager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -266,6 +267,32 @@ fun FavoritesScreen(navController: NavController){ //will eventually also take a
 fun AccountScreen(navController: NavController){ //will eventually also take a parameter for navController when complete
     //TODO: this is where the user will be able to Logout, Delete/Update password or username
 
+    Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)){
+        Row(){
+            Text("This is the Accounts Screen!")
+        }
+    }
+
+    Button(onClick = {
+        navController.navigate("changeUsername")
+    }
+    ) {
+        Text("Change Username")
+    }
+
+    Button(onClick = {
+        navController.navigate("changePassword")
+    }){
+        Text("Change Password")
+    }
+
+    Button(onClick = {
+
+    }) {
+        Text("Delete Account")
+    }
+
+
     //NAVIGATION BAR
     Row(modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -290,4 +317,5 @@ fun AccountScreen(navController: NavController){ //will eventually also take a p
             }
         }
     }
+
 }
