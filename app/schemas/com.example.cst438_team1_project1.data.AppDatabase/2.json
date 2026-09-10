@@ -1,0 +1,139 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "f4c26a12981e1f97fc28ad79be9e35fa",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "userId"
+          ]
+        }
+      },
+      {
+        "tableName": "crypto_coins",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`coin_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `coin_name` TEXT NOT NULL, `coin_ticker` TEXT NOT NULL, `coin_image` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "coinId",
+            "columnName": "coin_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coinName",
+            "columnName": "coin_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coinTicker",
+            "columnName": "coin_ticker",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coinImage",
+            "columnName": "coin_image",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "coin_id"
+          ]
+        }
+      },
+      {
+        "tableName": "save_points",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`saved_point_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `coin_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `price_usd` INTEGER NOT NULL, FOREIGN KEY(`coin_id`) REFERENCES `crypto_coins`(`coin_id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`user_id`) REFERENCES `User`(`userId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "savedPointId",
+            "columnName": "saved_point_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coinId",
+            "columnName": "coin_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priceUSD",
+            "columnName": "price_usd",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "saved_point_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "crypto_coins",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "coin_id"
+            ],
+            "referencedColumns": [
+              "coin_id"
+            ]
+          },
+          {
+            "table": "User",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "userId"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f4c26a12981e1f97fc28ad79be9e35fa')"
+    ]
+  }
+}

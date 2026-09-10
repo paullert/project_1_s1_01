@@ -72,6 +72,9 @@ class MainActivity : AppCompatActivity() {
                     startDestination = "Login"
                 )
                 {
+                    composable("Login") {
+                        LoginScreen(remNavController)
+                    }
                     composable("SignUp") {
                         SignUpScreen(remNavController)
                     }
@@ -88,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                         ChangeUsernameScreen(remNavController)
                     }
                     composable("changePassword") {
-                        com.example.cst438_team1_project1.ChangePasswordScreen(remNavController)
+                        ChangePasswordScreen(remNavController)
                     }
                 }
 
@@ -468,7 +471,7 @@ class MainActivity : AppCompatActivity() {
                     onClick = {
                         coroutineScope.launch {
                             sessionManager.removeUserId()
-                            navController.navigate("login") {
+                            navController.navigate("Login") {
                                 popUpTo(0)
                             }
                         }
