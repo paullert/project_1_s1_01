@@ -39,6 +39,12 @@ class SessionManager(context: Context) {
         preferences[loggedInUserIdKey]
     }
 
+    suspend fun removeUserId() {
+        appContext.dataStore.edit { preferences ->
+            preferences.remove(loggedInUserIdKey)
+        }
+    }
+
     //TODO REMOVEUSERID FOR LOGOUT
 
 }
