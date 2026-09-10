@@ -41,27 +41,40 @@ import com.example.cst438_team1_project1.data.entity.User
 import kotlinx.coroutines.coroutineScope
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.lifecycleScope
 import com.example.cst438_team1_project1.data.SessionManager
+import com.example.cst438_team1_project1.data.createTestUsers
 import kotlinx.coroutines.flow.first
-import org.junit.Test
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val database = AppDatabase.getDatabase(this)
+
+        lifecycleScope.launch {
+            createTestUsers(database)
+        }
         setContent {
 
-            Surface(modifier = Modifier.fillMaxSize(),
-                color = Color.White) { //screen was black so added default background color
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.White
+            ) { //screen was black so added default background color
                 val remNavController = rememberNavController()
-
                 NavHost(
                     navController = remNavController,
-                    startDestination = "SignUp"
-                ) //TODO: CHANGE startDestination to LOGIN Page when done
+                    startDestination = "Login"
+                )
                 {
+                    composable("Login") {
+                        LoginScreen(remNavController)
+                    }
                     composable("SignUp") {
                         SignUpScreen(remNavController)
                     }
@@ -83,6 +96,114 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+        }
+    }
+
+    @Composable
+    fun LoginScreen(navcontroller: NavController) {
+
+        var username by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var loginError by remember { mutableStateOf("") }
+
+        val context = LocalContext.current
+        val database = AppDatabase.getDatabase(context)
+        val scope = rememberCoroutineScope()
+
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+
+            Row() {
+                Text("Login Screen!", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(100.dp))
+
+            Row() {
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    placeholder = {
+                        Text(
+                            "username",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row() {
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    placeholder = {
+                        Text(
+                            "password",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row() {
+                if (loginError.isNotEmpty()) {
+                    Text(loginError)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+
+            Row() {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            val user = database.userDao().findByUsername(username)
+
+                            if (user != null && user.password == password) {
+                                navcontroller.navigate("Home")
+                            } else {
+                                loginError = "Invalid username or password"
+                            }
+                        }
+                    }
+                ) {
+                    Text(
+                        "login",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(200.dp))
+
+            Row() {
+                Button(
+                    onClick = {
+                        navcontroller.navigate("SignUp")
+                    }
+                ) {
+                    Text(
+                        "Create Account",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+
         }
     }
 
@@ -177,9 +298,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val newUser = User(username = username, password = pass1)
-                    val insertedUserId = userDao.insertUser(newUser).toInt()
-                    val sessionManager = SessionManager(context)
-                    sessionManager.saveUserId(insertedUserId)
+                    userDao.insertUser(newUser)
                     //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
                     //TODO make it so that it'll go to homepage screen after creating acc
@@ -352,7 +471,7 @@ class MainActivity : AppCompatActivity() {
                     onClick = {
                         coroutineScope.launch {
                             sessionManager.removeUserId()
-                            navController.navigate("login") {
+                            navController.navigate("Login") {
                                 popUpTo(0)
                             }
                         }
@@ -367,8 +486,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-@Composable
-fun ChangeUsernameScreen(navController: NavController) {
+    @Composable
+    fun ChangeUsernameScreen(navController: NavController) {
 
         var newUsername by remember { mutableStateOf("") }
         val context = LocalContext.current
@@ -451,96 +570,98 @@ fun ChangeUsernameScreen(navController: NavController) {
             }
         }
     }
-}
 
-@Composable
-fun ChangePasswordScreen(navController: NavController) {
-    Text("CHANGE PASSWORD PAGE")
+    @Composable
+    fun ChangePasswordScreen(navController: NavController) {
+        Text("CHANGE PASSWORD PAGE")
 
-    var newPass by remember { mutableStateOf("") }
-    var confirmPass by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    var errorMessage by remember { mutableStateOf("") }
+        var newPass by remember { mutableStateOf("") }
+        var confirmPass by remember { mutableStateOf("") }
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+        var errorMessage by remember { mutableStateOf("") }
 
-    val sessionManager = SessionManager(context)
+        val sessionManager = SessionManager(context)
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(top = 80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("CHANGE PASSWORD PAGE", fontSize = 30.sp)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("CHANGE PASSWORD PAGE", fontSize = 30.sp)
 
-        if (errorMessage.isNotBlank()) {
-            Text(text = errorMessage, fontSize = 14.sp, color = Color.Red)
-        }
-
-        Row() {
-            Text(text = "Password: ", fontSize = 14.sp)
-
-            TextField(
-                value = newPass,
-                onValueChange = {
-                    newPass = it
-                },
-                placeholder = {
-                    Text("Enter new username")
-                }
-            )
-        }
-
-        Row() {
-            Text(text = "Confirm password: ", fontSize = 14.sp)
-            TextField(
-                value = confirmPass,
-                onValueChange = {
-                    confirmPass = it
-                },
-                placeholder = {
-                    Text("Confirm new password")
-                })
-        }
-
-        Button(onClick = {
-
-            errorMessage = ""
-
-            val passText = newPass
-            val confirmText = confirmPass
-
-            if (passText.isBlank() || confirmText.isBlank()) {
-                errorMessage = "Password must be filled in."
-                return@Button
+            if (errorMessage.isNotBlank()) {
+                Text(text = errorMessage, fontSize = 14.sp, color = Color.Red)
             }
 
-            if (passText != confirmText) {
-                errorMessage = "Passwords must match."
-                return@Button
+            Row() {
+                Text(text = "Password: ", fontSize = 14.sp)
+
+                TextField(
+                    value = newPass,
+                    onValueChange = {
+                        newPass = it
+                    },
+                    placeholder = {
+                        Text("Enter new username")
+                    }
+                )
             }
 
-            coroutineScope.launch {
-                val savedUserId = sessionManager.readUserId.first()
+            Row() {
+                Text(text = "Confirm password: ", fontSize = 14.sp)
+                TextField(
+                    value = confirmPass,
+                    onValueChange = {
+                        confirmPass = it
+                    },
+                    placeholder = {
+                        Text("Confirm new password")
+                    })
+            }
 
-                if (savedUserId == null) {
-                    errorMessage = "No Logged in user found"
-                    return@launch
+            Button(onClick = {
+
+                errorMessage = ""
+
+                val passText = newPass
+                val confirmText = confirmPass
+
+                if (passText.isBlank() || confirmText.isBlank()) {
+                    errorMessage = "Password must be filled in."
+                    return@Button
                 }
 
-                val db = AppDatabase.getDatabase(context)
-                val dao = db.userDao()
-                dao.updatePassword(savedUserId, passText)
+                if (passText != confirmText) {
+                    errorMessage = "Passwords must match."
+                    return@Button
+                }
+
+                coroutineScope.launch {
+                    val savedUserId = sessionManager.readUserId.first()
+
+                    if (savedUserId == null) {
+                        errorMessage = "No Logged in user found"
+                        return@launch
+                    }
+
+                    val db = AppDatabase.getDatabase(context)
+                    val dao = db.userDao()
+                    dao.updatePassword(savedUserId, passText)
+                    navController.popBackStack()
+                }
+
+
+            }) {
+                Text(text = "Change Password")
+            }
+
+            Button(onClick = {
                 navController.popBackStack()
+            }) {
+                Text("Cancel")
             }
-
-
-        }) {
-            Text(text = "Change Password")
-        }
-
-        Button(onClick = {
-            navController.popBackStack()
-        }) {
-            Text("Cancel")
         }
     }
+
+
 }
