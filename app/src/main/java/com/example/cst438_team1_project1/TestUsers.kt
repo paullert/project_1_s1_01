@@ -5,11 +5,11 @@ import com.example.cst438_team1_project1.data.entity.User
 suspend fun createTestUsers(database: AppDatabase) {
     val userDao = database.userDao()
 
-    if (userDao.findByUsername("testuser") == null) {
+    if (userDao.findByUsername("test") == null) {
         userDao.insertUser(
             User(
-                username = "testuser",
-                password = "password123"
+                username = "test",
+                password = "testpass"
             )
         )
     }

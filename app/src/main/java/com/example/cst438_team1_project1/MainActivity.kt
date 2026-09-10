@@ -44,16 +44,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Arrangement
+import androidx.lifecycle.lifecycleScope
+import com.example.cst438_team1_project1.data.createTestUsers
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val database = AppDatabase.getDatabase(this)
+
+        lifecycleScope.launch {
+            createTestUsers(database)
+        }
+
         setContent{
             val remNavController = rememberNavController()
             NavHost(
                 navController = remNavController,
-                startDestination = "Login") //TODO: CHANGE startDestination to LOGIN Page when done
+                startDestination = "Login")
             {
                 composable("Login"){
                     LoginScreen(remNavController)
@@ -76,9 +87,13 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun LoginScreen(navcontroller : NavController){
 
-
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var loginError by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val database = AppDatabase.getDatabase(context)
+    val scope = rememberCoroutineScope()
 
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
@@ -88,11 +103,7 @@ fun LoginScreen(navcontroller : NavController){
             Text("Login Screen!", fontSize = 40.sp, fontWeight = FontWeight.Bold)
         }
 
-
         Spacer(modifier = Modifier.height(100.dp))
-
-
-
 
         Row(){
             TextField( value = username,
@@ -101,25 +112,38 @@ fun LoginScreen(navcontroller : NavController){
             )
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
 
-
         Row(){
-            TextField( value = username,
-                onValueChange = { username = it},
+            TextField( value = password,
+                onValueChange = { password = it},
                 placeholder = { Text("password", fontSize = 25.sp, fontWeight = FontWeight.Bold)}
             )
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Row(){
+            if (loginError.isNotEmpty()) {
+                Text(loginError)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
 
         Row(){
             Button(
                 onClick = {
-                    navcontroller.navigate("Home")
+                    scope.launch {
+                        val user = database.userDao().findByUsername(username)
+
+                        if (user != null && user.password == password) {
+                            navcontroller.navigate("Home")
+                        } else {
+                            loginError = "Invalid username or password"
+                        }
+                    }
                 }
             ) {
                 Text(
@@ -130,11 +154,7 @@ fun LoginScreen(navcontroller : NavController){
             }
         }
 
-
         Spacer(modifier = Modifier.height(200.dp))
-
-
-
 
         Row(){
             Button(
