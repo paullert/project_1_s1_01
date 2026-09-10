@@ -25,7 +25,7 @@ https://developer.android.com/training/data-storage/room
         CryptoCoin::class,
         SavePoint::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 
@@ -52,7 +52,7 @@ abstract class AppDatabase : RoomDatabase(){
                 context.applicationContext,
                 AppDatabase::class.java,//room doesn't know which database to build so we tell it which one
                 "userDatabase"
-            ).build()
+            ).fallbackToDestructiveMigration(true).build()
 
             return INSTANCE!!
         }

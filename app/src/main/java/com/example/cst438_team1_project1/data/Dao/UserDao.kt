@@ -15,14 +15,18 @@ import com.example.cst438_team1_project1.data.entity.User
 @Dao
 interface UserDao {
     @Insert
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(user: User): Long
     //^^ means the same as INSERT INTO USER (username, password) VALUES('user1','abc123')
 
     @Query("SELECT * FROM user WHERE username = :username LIMIT 1")
     suspend fun findByUsername(username: String) : User?
     //^^ find the user whose user name matched and it will return 1 user or if user dne it'll return null
 
-    //#TODO add update username and password later
+    @Query("UPDATE user SET username = :newUsername WHERE userId = :id")
+    suspend fun updateUsername(id: Int, newUsername: String)
+
+    @Query("UPDATE user SET password = :newPass WHERE userId = :id")
+    suspend fun updatePassword(id: Int, newPass: String)
 
     @Delete
     suspend fun deleteUser(user: User)

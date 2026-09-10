@@ -28,7 +28,7 @@ import androidx.room3.PrimaryKey
         // TODO: change User entity property from "id" to "user_id"
         ForeignKey(
             entity = User::class,
-            parentColumns = ["id"],
+            parentColumns = ["userId"],
             childColumns = ["user_id"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
