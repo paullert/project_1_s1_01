@@ -117,11 +117,17 @@ fun LoginScreen(navcontroller : NavController){
 
 
         Row(){
-            Button(onClick = {
-                //scene change logic
-
-
-            }) {Text("login", fontSize = 25.sp, fontWeight = FontWeight.Bold) }
+            Button(
+                onClick = {
+                    navcontroller.navigate("Home")
+                }
+            ) {
+                Text(
+                    "login",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
 
@@ -131,11 +137,17 @@ fun LoginScreen(navcontroller : NavController){
 
 
         Row(){
-            Button(onClick = {
-                //navigate to signUp screen logic
-
-
-            }) {Text("Create account", fontSize = 25.sp, fontWeight = FontWeight.Bold) }
+            Button(
+                onClick = {
+                    navcontroller.navigate("SignUp")
+                }
+            ) {
+                Text(
+                    "Create Account",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
 
