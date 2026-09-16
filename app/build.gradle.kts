@@ -1,3 +1,6 @@
+import com.android.build.api.variant.BuildConfigField
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -38,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -86,4 +90,29 @@ dependencies {
 
 room3 {
     schemaDirectory("$projectDir/schemas")
+}
+
+
+//Below Code is used to populate app with API Key
+// Must provide the api key in the secret.properties file
+val secrets = Properties()
+val secretsFile = rootProject.file("secrets.properties")
+
+if (secretsFile.exists()) {
+    secretsFile.inputStream().use { secrets.load(it) }
+}
+
+val apiKey = secrets.getProperty("COINGECKO_API_KEY")
+    ?: System.getenv("COINGECKO_API_KEY")
+    ?: error("COINGECKO_API_KEY is missing")
+
+androidComponents.onVariants { variant ->
+    variant.buildConfigFields?.put(
+        "COINGECKO_API_KEY",
+        BuildConfigField(
+            type = "String",
+            value = "\"$apiKey\"",
+            comment = "API key"
+        )
+    )
 }
