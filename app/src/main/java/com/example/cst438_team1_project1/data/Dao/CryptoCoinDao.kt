@@ -3,18 +3,19 @@ package com.example.cst438_team1_project1.data.Dao
 import androidx.room3.Dao
 import androidx.room3.Delete
 import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
 import androidx.room3.Update
 import com.example.cst438_team1_project1.data.entity.CryptoCoin
 
 @Dao
 interface CryptoCoinDao {
-    @Insert
-    suspend fun insertCoin(coin: CryptoCoin)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCoin(coin: CryptoCoin): Long
     // Equivalent to "INSERT INTO table (..., ...) VALUES(..., ...)"
 
     @Delete
-    suspend fun deleteCoin(coin: CryptoCoin)
+    suspend fun deleteCoin(coin: CryptoCoin): Int
     // Easier alternative to delete query
 
     @Update
@@ -38,4 +39,7 @@ interface CryptoCoinDao {
     // Finds a coins by string, can be used for search bars as autofill
     // Like is used for case-insensitive string pattern matching
     // % = ignore all characters before/after   || = string concatenation
+
+    @Query("SELECT * FROM crypto_coins")
+    suspend fun getAllCoins(): List<CryptoCoin>
 }

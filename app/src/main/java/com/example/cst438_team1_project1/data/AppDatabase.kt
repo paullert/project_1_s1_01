@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room3.Database
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.example.cst438_team1_project1.data.Dao.CryptoCoinDao
 import com.example.cst438_team1_project1.data.Dao.SavePointDao
 import com.example.cst438_team1_project1.data.entity.User
@@ -29,7 +31,7 @@ https://developer.android.com/training/data-storage/room
     exportSchema = true
 )
 
-abstract class AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun cryptoCoinDao(): CryptoCoinDao
     abstract fun savePointDao(): SavePointDao
@@ -42,7 +44,7 @@ abstract class AppDatabase : RoomDatabase(){
         //only AppDatabase can access this priv var. initially when app opened database is null
 
         fun getDatabase(context: Context): AppDatabase {
-            if(INSTANCE != null){
+            if (INSTANCE != null) {
                 return INSTANCE!!
                 //!! means like i promise this isn't null
             }
@@ -52,7 +54,17 @@ abstract class AppDatabase : RoomDatabase(){
                 context.applicationContext,
                 AppDatabase::class.java,//room doesn't know which database to build so we tell it which one
                 "userDatabase"
-            ).fallbackToDestructiveMigration(true).build()
+            )
+                .fallbackToDestructiveMigration(true)
+                .addCallback(object : RoomDatabase.Callback() {
+                    override suspend fun onCreate(db: SQLiteConnection) {
+                        super.onCreate(db)
+
+                        db.execSQL("""INSERT INTO User (username, password) VALUES ('admin', '123')""".trimIndent()
+                        )
+                    }
+                })
+                .build()
 
             return INSTANCE!!
         }

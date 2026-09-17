@@ -7,6 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     private const val BASE_URL = "https://api.coinbase.com/v2/"
+    private const val GECKO_URL = "https://api.coingecko.com/api/v3/"
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -23,5 +24,14 @@ object RetrofitClient {
             .client(httpClient)
             .build()
             .create(CoinbaseApi::class.java)
+    }
+
+    val coinGeckoAPI: CoinGeckoAPI by lazy {
+        Retrofit.Builder()
+            .baseUrl(GECKO_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
+            .build()
+            .create(CoinGeckoAPI::class.java)
     }
 }
