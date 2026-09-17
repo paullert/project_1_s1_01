@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.room3.common)
     implementation(libs.androidx.room3.runtime)
+    implementation(libs.androidx.ui.test.junit4)
     implementation(libs.core.ktx)
     ksp(libs.androidx.room3.compiler)
     implementation(libs.androidx.ui)
@@ -81,11 +82,13 @@ dependencies {
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.core.ktx)
     testImplementation(libs.kotlinx.coroutines.test)
 
     debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // TODO: ADDRESS LATER
     androidTestImplementation(libs.androidx.room3.testing)
