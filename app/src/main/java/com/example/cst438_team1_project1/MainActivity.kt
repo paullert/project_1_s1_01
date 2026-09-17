@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity() {
         var loginError by remember { mutableStateOf("") }
 
         val context = LocalContext.current
+        val sessionManager = remember{ SessionManager(context) }
         val database = AppDatabase.getDatabase(context)
         val scope = rememberCoroutineScope()
 
@@ -172,6 +173,7 @@ class MainActivity : AppCompatActivity() {
                             val user = database.userDao().findByUsername(username)
 
                             if (user != null && user.password == password) {
+                                sessionManager.saveUserId(user.userId)
                                 navcontroller.navigate("Home")
                             } else {
                                 loginError = "Invalid username or password"
