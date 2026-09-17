@@ -38,7 +38,6 @@ import androidx.sqlite.driver.AndroidSQLiteDriver
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
-import kotlinx.coroutines.coroutineScope
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -46,7 +45,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cst438_team1_project1.composables.AddCoins
 import com.example.cst438_team1_project1.data.SessionManager
+import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
+import com.example.cst438_team1_project1.data.api.SearchViewModelFactory
 import com.example.cst438_team1_project1.data.createTestUsers
 import kotlinx.coroutines.flow.first
 
@@ -57,10 +60,20 @@ class MainActivity : AppCompatActivity() {
 
         val database = AppDatabase.getDatabase(this)
 
+        // Populate in-app list and add values to coin table
+        val repository = CryptoCoinRepository(
+            coinGeckoAPI = RetrofitClient.coinGeckoAPI,
+            cryptoCoinDao = database.cryptoCoinDao()
+        )
+
         lifecycleScope.launch {
             createTestUsers(database)
         }
         setContent {
+            // Used to search API, generate an in-app list, and add values to coin table
+            val viewModel: SearchViewModel = viewModel(
+                factory = SearchViewModelFactory(repository)
+            )
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -92,6 +105,13 @@ class MainActivity : AppCompatActivity() {
                     }
                     composable("changePassword") {
                         ChangePasswordScreen(remNavController)
+                    }
+                    // Added through separate file with compose function
+                    composable("AddCoins") {
+                        val vm: SearchViewModel = viewModel(
+                            factory = SearchViewModelFactory(repository)
+                        )
+                        AddCoins(remNavController, viewModel = vm)
                     }
                 }
 
@@ -219,7 +239,9 @@ class MainActivity : AppCompatActivity() {
         var coroutineScope = rememberCoroutineScope()
         //got help from gemini with coroutine scope
 
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
 
             Row() {
                 Text("Crypto-Tracker", fontSize = 40.sp, fontWeight = FontWeight.Bold)
@@ -331,7 +353,9 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun HomeScreen(navController: NavController) { //will eventually also take a parameter for navController when complete
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
             Row() {
                 Text(text = "WIP HOME PAGE", fontSize = 30.sp, fontWeight = FontWeight.Bold)
             }
@@ -346,7 +370,9 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -369,12 +395,21 @@ class MainActivity : AppCompatActivity() {
                     Text("Account")
                 }
             }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                }) {
+                    Text("Add Coins")
+                }
+            }
         }
     }
 
     @Composable
     fun FavoritesScreen(navController: NavController) { //will eventually also take a parameter for navController when complete
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
             Row() {
                 Text("This will be for the user's favorite coins to see")
             }
@@ -382,7 +417,9 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -414,7 +451,9 @@ class MainActivity : AppCompatActivity() {
         val sessionManager = remember { SessionManager(context) }
         val coroutineScope = rememberCoroutineScope()
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row() {
@@ -444,7 +483,9 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -497,7 +538,9 @@ class MainActivity : AppCompatActivity() {
         var errorMessage by remember { mutableStateOf("") }
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -584,7 +627,9 @@ class MainActivity : AppCompatActivity() {
         val sessionManager = SessionManager(context)
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("CHANGE PASSWORD PAGE", fontSize = 30.sp)
@@ -662,6 +707,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
 }
