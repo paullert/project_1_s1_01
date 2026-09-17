@@ -5,36 +5,33 @@ import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.Query
 import androidx.room3.Update
+import com.example.cst438_team1_project1.data.entity.CryptoCoin
 import com.example.cst438_team1_project1.data.entity.SavePoint
 
 @Dao
 interface SavePointDao {
     @Insert
-    suspend fun insertSavePoint(save: SavePoint)
-    // Equivalent to "INSERT INTO table (..., ...) VALUES(..., ...)"
+    suspend fun insertSavePoint(savePoint: SavePoint)
 
+
+    //TODO: Make sure there is a cascade to delete all related savePoints
     @Delete
-    suspend fun deleteSavePoint(save: SavePoint)
-    // Easier alternative to written delete query
+    suspend fun deleteSavePoint(savePoint: SavePoint)
 
-    @Update
-    suspend fun updateSavePoint(save: SavePoint)
-    // Could be used later on, we'll see
+    //Update not needed: SavePoint is static
 
-    @Query("SELECT * FROM save_points WHERE saved_point_id = :savePointId LIMIT 1")
-    suspend fun findBySaveId(savePointId: Int) : SavePoint?
-    // Could be used to inspect/magnify 1 specific crypto point
+    @Query("SELECT * FROM crypto_save_points WHERE userId = :userId")
+    suspend fun findSavePointsByUserId(userId: Int): List<SavePoint>
 
-    @Query("SELECT * FROM save_points WHERE user_id = :userId")
-    suspend fun searchByUser(userId: Int) : List<SavePoint>?
-    // Finds save points by user id
+    //When a user is looking at a coin, you might want to know if they’ve already saved it
+    @Query("SELECT * FROM crypto_save_points WHERE userId = :userId AND coinId = :coinId")
+    suspend fun getSavePoint(userId: Int, coinId: Int): SavePoint?
 
-    @Query("SELECT * FROM save_points WHERE user_id = :userId ORDER BY price_USD DESC")
-    suspend fun searchByUserAsc(userId: Int) : List<SavePoint>?
-    // Finds save points by user id, but orders by most expensive coins first
+    //Deletes crypto coin based on user and coin Id!
+    @Query("DELETE FROM crypto_save_points WHERE userId = :userId AND coinId = :coinId")
+    suspend fun deleteByUserAndCoin(userId: Int, coinId: Int)
 
-    @Query("SELECT * FROM save_points WHERE coin_id = :coinId")
-    suspend fun searchByCoinId(coinId: Int) : List<SavePoint>?
-    // Finds points based on coin ids
-    // Doubt this is useful for the user, maybe admins will like for statistics
+    //STRICTLY FOR TESTING -->
+    @Query("SELECT * FROM crypto_save_points")
+    suspend fun getAllSavePoints(): List<SavePoint>
 }
