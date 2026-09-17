@@ -49,6 +49,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cst438_team1_project1.data.SessionManager
 import com.example.cst438_team1_project1.data.createTestUsers
 import kotlinx.coroutines.flow.first
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,11 @@ class MainActivity : AppCompatActivity() {
         }
         setContent {
 
+            val sessionManager = remember { SessionManager(this@MainActivity) }
+            val loggedInUserId by sessionManager.readUserId.collectAsState(initial = null)
+            val startDestination = if (loggedInUserId != null) { "Home" } else { "Login" }
+
+
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = Color.White
@@ -69,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 val remNavController = rememberNavController()
                 NavHost(
                     navController = remNavController,
-                    startDestination = "Login"
+                    startDestination = startDestination
                 )
                 {
                     composable("Login") {
@@ -323,10 +329,10 @@ class MainActivity : AppCompatActivity() {
                 Text(text = "Already have an account?")
             }
 
-            Button(onClick = {}) {
+            Button(onClick = {
+                navController.navigate("Login")
+            }) {
                 Text(text = "LOGIN")
-                //TODO make it so that go to Login page
-                //will look something like: navController.navigate("Login")
             }
         }
     }
