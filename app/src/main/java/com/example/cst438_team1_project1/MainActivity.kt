@@ -1,6 +1,5 @@
 package com.example.cst438_team1_project1
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -22,19 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawContext
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import androidx.room3.Room
-import androidx.sqlite.driver.AndroidSQLiteDriver
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
@@ -47,9 +43,10 @@ import androidx.compose.ui.Alignment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cst438_team1_project1.composables.AddCoins
+import com.example.cst438_team1_project1.composables.ViewCoins
 import com.example.cst438_team1_project1.data.SessionManager
 import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
-import com.example.cst438_team1_project1.data.api.SearchViewModelFactory
+import com.example.cst438_team1_project1.viewModels.CoinViewModelFactory
 import com.example.cst438_team1_project1.data.createTestUsers
 import kotlinx.coroutines.flow.first
 
@@ -71,9 +68,6 @@ class MainActivity : AppCompatActivity() {
         }
         setContent {
             // Used to search API, generate an in-app list, and add values to coin table
-            val viewModel: SearchViewModel = viewModel(
-                factory = SearchViewModelFactory(repository)
-            )
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -108,10 +102,15 @@ class MainActivity : AppCompatActivity() {
                     }
                     // Added through separate file with compose function
                     composable("AddCoins") {
-                        val vm: SearchViewModel = viewModel(
-                            factory = SearchViewModelFactory(repository)
-                        )
-                        AddCoins(remNavController, viewModel = vm)
+                        AddCoins(remNavController, viewModel = viewModel(
+                            factory = CoinViewModelFactory(repository)
+                        ))
+                    }
+
+                    composable("ViewCoins") {
+                        ViewCoins(remNavController, viewModel = viewModel(
+                            factory = CoinViewModelFactory(repository)
+                        ))
                     }
                 }
 
@@ -371,9 +370,10 @@ class MainActivity : AppCompatActivity() {
         //NAVIGATION BAR
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
                 .padding(bottom = 40.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Bottom
         ) {
             Column() {
@@ -400,6 +400,13 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate("AddCoins")
                 }) {
                     Text("Add Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                }) {
+                    Text("View Coins")
                 }
             }
         }

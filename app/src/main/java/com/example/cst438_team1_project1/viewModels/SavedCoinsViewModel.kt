@@ -1,37 +1,39 @@
-package com.example.cst438_team1_project1
+package com.example.cst438_team1_project1.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.cst438_team1_project1.data.AppDatabase
+import com.example.cst438_team1_project1.BuildConfig
 import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
-import com.example.cst438_team1_project1.data.api.RetrofitClient
+import com.example.cst438_team1_project1.data.entity.CryptoCoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class Coin (
-//    val coinId: String,
-    val coinName: String,
-    val coinTicker: String,
-    val coinImage: String
-)
+//data class Coin (
+////    val coinId: String,
+//    val coinName: String,
+//    val coinTicker: String,
+//    val coinImage: String
+//)
 
-data class SearchUiState(
+data class SavedCoinsUiState(
     val isLoading: Boolean = false,
-    val result: List<Coin> = emptyList(),
+    val result: List<CoinRow> = emptyList(),
     val error: String? = null
 )
 
-class SearchViewModel(private val repository: CryptoCoinRepository) : ViewModel() {
-    private var _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+class SavedCoinsViewModel(private val repository: CryptoCoinRepository) : ViewModel() {
+    private var _uiState = MutableStateFlow(SavedCoinsUiState())
+    val uiState: StateFlow<SavedCoinsUiState> = _uiState.asStateFlow()
 
+    init {
+        loadCoins()
+    }
 
-    fun searchCoins(query: String) {
+    fun loadCoins() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -41,10 +43,7 @@ class SearchViewModel(private val repository: CryptoCoinRepository) : ViewModel(
             }
 
             try {
-                val coins = repository.searchCoins(
-                    query = query,
-                    apiKey = BuildConfig.COINGECKO_API_KEY
-                )
+                val coins = repository.loadAllCoins()
 
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -64,18 +63,19 @@ class SearchViewModel(private val repository: CryptoCoinRepository) : ViewModel(
         }
     }
 
-    fun addCoin(coin: Coin) {
+    fun removeCoin(coin: CoinRow) {
         viewModelScope.launch {
             try {
-                Log.d("DATABASE_TEST", "Add clicked: ${coin.coinName}")
+                Log.d("DATABASE_TEST", "Remove clicked: ${coin.coinName}")
 
-                repository.addCoin(coin)
+                repository.removeCoin(coin)
 
-                Log.d("DATABASE_TEST", "Repository insert finished")
+                Log.d("DATABASE_TEST", "Repository delete finished")
+                loadCoins()
             } catch (exception: Exception) {
                 Log.e(
                     "DATABASE_TEST",
-                    "Insert failed",
+                    "Delete failed",
                     exception
                 )
             }
