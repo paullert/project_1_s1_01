@@ -1,3 +1,7 @@
+import com.android.build.api.variant.BuildConfigField
+import org.gradle.kotlin.dsl.android
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -38,6 +42,8 @@ android {
     }
     buildFeatures {
         compose = true
+        // Allows local variables to be used in program
+        buildConfig = true
     }
 }
 
@@ -68,6 +74,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("androidx.datastore:datastore-preferences:1.2.1")
 
+    //Allows the use of internet images in composable
+    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
 
     testImplementation(libs.junit)
 
@@ -86,4 +95,28 @@ dependencies {
 
 room3 {
     schemaDirectory("$projectDir/schemas")
+}
+
+//Below Code is used to populate app with API Key
+// Must provide the api key in the secret.properties file
+val secrets = Properties()
+val secretsFile = rootProject.file("secrets.properties")
+
+if (secretsFile.exists()) {
+    secretsFile.inputStream().use { secrets.load(it) }
+}
+
+val apiKey = secrets.getProperty("COINGECKO_API_KEY")
+    ?: System.getenv("COINGECKO_API_KEY")
+    ?: error("COINGECKO_API_KEY is missing")
+
+androidComponents.onVariants { variant ->
+    variant.buildConfigFields?.put(
+        "COINGECKO_API_KEY",
+        BuildConfigField(
+            type = "String",
+            value = "\"$apiKey\"",
+            comment = "API key"
+        )
+    )
 }
