@@ -15,7 +15,7 @@ interface CryptoCoinDao {
     // Equivalent to "INSERT INTO table (..., ...) VALUES(..., ...)"
 
     @Delete
-    suspend fun deleteCoin(coin: CryptoCoin): Long
+    suspend fun deleteCoin(coin: CryptoCoin): Int
     // Easier alternative to delete query
 
     @Update
@@ -39,4 +39,7 @@ interface CryptoCoinDao {
     // Finds a coins by string, can be used for search bars as autofill
     // Like is used for case-insensitive string pattern matching
     // % = ignore all characters before/after   || = string concatenation
+
+    @Query("SELECT * FROM crypto_coins")
+    suspend fun getAllCoins(): List<CryptoCoin>
 }
