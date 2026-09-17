@@ -1,6 +1,5 @@
 package com.example.cst438_team1_project1
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -22,23 +24,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawContext
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import androidx.room3.Room
-import androidx.sqlite.driver.AndroidSQLiteDriver
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.api.RetrofitClient
 import com.example.cst438_team1_project1.data.entity.User
-import kotlinx.coroutines.coroutineScope
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -46,9 +41,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cst438_team1_project1.composables.AddCoins
+import com.example.cst438_team1_project1.composables.ViewCoins
 import com.example.cst438_team1_project1.data.SessionManager
+import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
+import com.example.cst438_team1_project1.viewModels.CoinViewModelFactory
 import com.example.cst438_team1_project1.data.createTestUsers
 import kotlinx.coroutines.flow.first
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +58,22 @@ class MainActivity : AppCompatActivity() {
 
         val database = AppDatabase.getDatabase(this)
 
+        // Populate in-app list and add values to coin table
+        val repository = CryptoCoinRepository(
+            coinGeckoAPI = RetrofitClient.coinGeckoAPI,
+            cryptoCoinDao = database.cryptoCoinDao()
+        )
+
         lifecycleScope.launch {
             createTestUsers(database)
         }
         setContent {
+            // Used to search API, generate an in-app list, and add values to coin table
+
+            val sessionManager = remember { SessionManager(this@MainActivity) }
+            val loggedInUserId by sessionManager.readUserId.collectAsState(initial = null)
+            val startDestination = if (loggedInUserId != null) { "Home" } else { "Login" }
+
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -69,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 val remNavController = rememberNavController()
                 NavHost(
                     navController = remNavController,
-                    startDestination = "Login"
+                    startDestination = startDestination
                 )
                 {
                     composable("Login") {
@@ -93,6 +106,18 @@ class MainActivity : AppCompatActivity() {
                     composable("changePassword") {
                         ChangePasswordScreen(remNavController)
                     }
+                    // Added through separate file with compose function
+                    composable("AddCoins") {
+                        AddCoins(remNavController, viewModel = viewModel(
+                            factory = CoinViewModelFactory(repository)
+                        ))
+                    }
+
+                    composable("ViewCoins") {
+                        ViewCoins(remNavController, viewModel = viewModel(
+                            factory = CoinViewModelFactory(repository)
+                        ))
+                    }
                 }
 
             }
@@ -107,6 +132,7 @@ class MainActivity : AppCompatActivity() {
         var loginError by remember { mutableStateOf("") }
 
         val context = LocalContext.current
+        val sessionManager = remember{ SessionManager(context) }
         val database = AppDatabase.getDatabase(context)
         val scope = rememberCoroutineScope()
 
@@ -172,6 +198,7 @@ class MainActivity : AppCompatActivity() {
                             val user = database.userDao().findByUsername(username)
 
                             if (user != null && user.password == password) {
+                                sessionManager.saveUserId(user.userId)
                                 navcontroller.navigate("Home")
                             } else {
                                 loginError = "Invalid username or password"
@@ -219,7 +246,9 @@ class MainActivity : AppCompatActivity() {
         var coroutineScope = rememberCoroutineScope()
         //got help from gemini with coroutine scope
 
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
 
             Row() {
                 Text("Crypto-Tracker", fontSize = 40.sp, fontWeight = FontWeight.Bold)
@@ -321,17 +350,19 @@ class MainActivity : AppCompatActivity() {
                 Text(text = "Already have an account?")
             }
 
-            Button(onClick = {}) {
+            Button(onClick = {
+                navController.navigate("Login")
+            }) {
                 Text(text = "LOGIN")
-                //TODO make it so that go to Login page
-                //will look something like: navController.navigate("Login")
             }
         }
     }
 
     @Composable
     fun HomeScreen(navController: NavController) { //will eventually also take a parameter for navController when complete
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
             Row() {
                 Text(text = "WIP HOME PAGE", fontSize = 30.sp, fontWeight = FontWeight.Bold)
             }
@@ -346,8 +377,11 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.Bottom
         ) {
             Column() {
@@ -369,12 +403,28 @@ class MainActivity : AppCompatActivity() {
                     Text("Account")
                 }
             }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                }) {
+                    Text("Add Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                }) {
+                    Text("View Coins")
+                }
+            }
         }
     }
 
     @Composable
     fun FavoritesScreen(navController: NavController) { //will eventually also take a parameter for navController when complete
-        Column(modifier = Modifier.fillMaxSize().padding(top = 80.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)) {
             Row() {
                 Text("This will be for the user's favorite coins to see")
             }
@@ -382,7 +432,9 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -414,7 +466,9 @@ class MainActivity : AppCompatActivity() {
         val sessionManager = remember { SessionManager(context) }
         val coroutineScope = rememberCoroutineScope()
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row() {
@@ -444,7 +498,9 @@ class MainActivity : AppCompatActivity() {
 
         //NAVIGATION BAR
         Row(
-            modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -497,7 +553,9 @@ class MainActivity : AppCompatActivity() {
         var errorMessage by remember { mutableStateOf("") }
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -584,7 +642,9 @@ class MainActivity : AppCompatActivity() {
         val sessionManager = SessionManager(context)
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("CHANGE PASSWORD PAGE", fontSize = 30.sp)
@@ -662,6 +722,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
 }
