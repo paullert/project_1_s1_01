@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "a6e5081839e6497a54121bb8fe856934",
+    "identityHash": "7e6b879652c605b424d8969c9bd354f5",
     "entities": [
       {
         "tableName": "User",
@@ -68,7 +68,18 @@
           "columnNames": [
             "coin_id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_crypto_coins_coin_ticker",
+            "unique": true,
+            "columnNames": [
+              "coin_ticker"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_crypto_coins_coin_ticker` ON `${TABLE_NAME}` (`coin_ticker`)"
+          }
+        ]
       },
       {
         "tableName": "crypto_save_points",
@@ -133,7 +144,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a6e5081839e6497a54121bb8fe856934')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e6b879652c605b424d8969c9bd354f5')"
     ]
   }
 }
