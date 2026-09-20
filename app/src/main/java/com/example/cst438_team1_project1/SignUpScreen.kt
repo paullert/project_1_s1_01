@@ -1,10 +1,14 @@
 package com.example.cst438_team1_project1
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +29,8 @@ import com.example.cst438_team1_project1.data.entity.User
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun SignUpScreen(navController: NavController) {
@@ -39,25 +45,32 @@ fun SignUpScreen(navController: NavController) {
     //got help from gemini with coroutine scope
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 80.dp)
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Row() {
             Text("Crypto-Tracker", fontSize = 40.sp, fontWeight = FontWeight.Bold)
         }
 
+        Spacer(modifier = Modifier.height(80.dp))
+
         Row() {
             Text(text = errorMessage, fontSize = 14.sp, color = Color.Red)
         }
 
         Row() {
-            Text("Choose a Username:")
+            Text("Choose a Username:",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
             TextField(
                 value = username,
                 onValueChange = { username = it },
-                placeholder = { Text("username here.") }
+                placeholder = { Text("username here",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold) },
+                modifier = Modifier.padding(start = 10.dp).width(200.dp)
             )
         }
         /*
@@ -65,24 +78,39 @@ fun SignUpScreen(navController: NavController) {
     https://developer.android.com/develop/ui/compose/text/migrate-state-based
     it talks about variable and mutableStateOf
     */
+        Spacer(modifier = Modifier.height(12.dp))
 
         Row() {
-            Text("Choose a password:")
+            Text("Choose a password:",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
             TextField(
                 value = pass1,
                 onValueChange = { pass1 = it },
-                placeholder = { Text("password here") }
+                placeholder = { Text("password here",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold) },
+                modifier = Modifier.padding(start = 10.dp).width(200.dp)
             )
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
         Row() {
-            Text("Confirm password:")
+            Text("Confirm password:",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
             TextField(
                 value = pass2,
                 onValueChange = { pass2 = it },
-                placeholder = { Text("enter same password") }
+                placeholder = { Text("enter same password",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold) },
+                modifier = Modifier.padding(start = 10.dp).width(200.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(25.dp))
 
         Button(onClick = {
             errorMessage = ""
@@ -124,7 +152,6 @@ fun SignUpScreen(navController: NavController) {
                 userDao.insertUser(newUser)
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
-                //TODO make it so that it'll go to homepage screen after creating acc
                 navController.navigate("Home")
 
                 // Example of how to call the Retrofit API:
@@ -137,17 +164,26 @@ fun SignUpScreen(navController: NavController) {
             }
 
         }) {
-            Text("SIGN UP!")
+            Text("SIGN UP!",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold)
         }
 
+        Spacer(modifier = Modifier.height(200.dp))
+
         Row() {
-            Text(text = "Already have an account?")
+            Text(text = "Already have an account?",
+                fontSize = 15.sp)
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Button(onClick = {
             navController.navigate("Login")
         }) {
-            Text(text = "LOGIN")
+            Text(text = "LOGIN",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold)
         }
     }
 }
