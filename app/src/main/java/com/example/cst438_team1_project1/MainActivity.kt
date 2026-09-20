@@ -69,9 +69,6 @@ class MainActivity : AppCompatActivity() {
                     composable("Home") {
                         HomeScreen(remNavController)
                     }
-                    composable("Favorites") {
-                        FavoritesScreen(remNavController)
-                    }
                     composable("Account") {
                         AccountScreen(remNavController)
                     }
@@ -88,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                         ))
                     }
 
-                    composable("ViewCoins") {
+                    composable("ViewCoins") { //THIS IS NEW HOME
                         ViewCoins(remNavController, viewModel = viewModel(
                             factory = CoinViewModelFactory(repository)
                         ))
