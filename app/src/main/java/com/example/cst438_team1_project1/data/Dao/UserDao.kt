@@ -31,4 +31,7 @@ interface UserDao {
     @Delete
     suspend fun deleteUser(user: User)
     //^^could also write a QUERY in sql but dont need it cuz room has delete
+
+    @Query("DELETE FROM user WHERE userId = :id")
+    suspend fun deleteUserById(id: Int)
 }

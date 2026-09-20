@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
+import com.example.cst438_team1_project1.data.SessionManager
 
 @Composable
 fun SignUpScreen(navController: NavController) {
@@ -41,6 +42,7 @@ fun SignUpScreen(navController: NavController) {
     var errorMessage by remember { mutableStateOf("") }
 
     var context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
     var coroutineScope = rememberCoroutineScope()
     //got help from gemini with coroutine scope
 
@@ -152,7 +154,7 @@ fun SignUpScreen(navController: NavController) {
                 userDao.insertUser(newUser)
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
-                navController.navigate("Home")
+                navController.navigate("ViewCoins") //view coins is now home
 
                 // Example of how to call the Retrofit API:
                 try {
