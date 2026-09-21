@@ -1,17 +1,22 @@
 package com.example.cst438_team1_project1
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -54,33 +59,31 @@ fun AccountScreen(navController: NavController) {
         }
     }
 
-
     //NAVIGATION BAR
     Row(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
             .padding(bottom = 40.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.Bottom
     ) {
         Column() {
-            Button(onClick = { navController.navigate("Home") }) {
-                Text("Home")
+            Button(onClick = {
+                navController.navigate("ViewCoins")
+            }) {
+                Text("My Coins")
             }
         }
         Column() {
             Button(onClick = {
-                navController.navigate("Favorites")
+                navController.navigate("AddCoins")
             }) {
-                Text("Favorites")
+                Text("Add Coins")
             }
         }
+
         Column() {
-            Button(onClick = {
-                navController.navigate("Account")
-            }) {
-                Text("Account")
-            }
 
             Button(
                 onClick = {
@@ -90,13 +93,14 @@ fun AccountScreen(navController: NavController) {
                             popUpTo(0)
                         }
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB0CEFF),
+                    contentColor = Color.Black)
             ) {
                 Text("Logout")
             }
         }
-
-
     }
 
 }

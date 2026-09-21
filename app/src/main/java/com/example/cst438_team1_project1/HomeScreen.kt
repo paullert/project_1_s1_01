@@ -43,26 +43,14 @@ fun HomeScreen(navController: NavController) { //will eventually also take a par
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
             .padding(bottom = 40.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.Bottom
     ) {
         Column() {
-            Button(onClick = { navController.navigate("Home") }) {
-                Text("Home")
-            }
-        }
-        Column() {
             Button(onClick = {
-                navController.navigate("Favorites")
+                navController.navigate("ViewCoins")
             }) {
-                Text("Favorites")
-            }
-        }
-        Column() {
-            Button(onClick = {
-                navController.navigate("Account")
-            }) {
-                Text("Account")
+                Text("My Coins")
             }
         }
         Column() {
@@ -74,9 +62,9 @@ fun HomeScreen(navController: NavController) { //will eventually also take a par
         }
         Column() {
             Button(onClick = {
-                navController.navigate("ViewCoins")
+                navController.navigate("Account")
             }) {
-                Text("View Coins")
+                Text("Account")
             }
         }
     }

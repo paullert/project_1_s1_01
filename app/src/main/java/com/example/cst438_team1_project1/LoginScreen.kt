@@ -101,7 +101,7 @@ fun LoginScreen(navcontroller: NavController) {
 
                         if (user != null && user.password == password) {
                             sessionManager.saveUserId(user.userId)
-                            navcontroller.navigate("Home")
+                            navcontroller.navigate("ViewCoins") //view Coins is now home
                         } else {
                             loginError = "Invalid username or password"
                         }

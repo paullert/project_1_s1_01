@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
             val sessionManager = remember { SessionManager(this@MainActivity) }
             val loggedInUserId by sessionManager.readUserId.collectAsState(initial = null)
-            val startDestination = if (loggedInUserId != null) { "Home" } else { "Login" }
+            val startDestination = if (loggedInUserId != null) { "ViewCoins" } else { "Login" }
 
 
             Surface(
@@ -66,12 +66,6 @@ class MainActivity : AppCompatActivity() {
                     composable("SignUp") {
                         SignUpScreen(remNavController)
                     }
-                    composable("Home") {
-                        HomeScreen(remNavController)
-                    }
-                    composable("Favorites") {
-                        FavoritesScreen(remNavController)
-                    }
                     composable("Account") {
                         AccountScreen(remNavController)
                     }
@@ -82,13 +76,13 @@ class MainActivity : AppCompatActivity() {
                         ChangePasswordScreen(remNavController)
                     }
                     // Added through separate file with compose function
-                    composable("AddCoins") {
+                    composable("AddCoins") { //ADD COINS is same as Explore
                         AddCoins(remNavController, viewModel = viewModel(
                             factory = CoinViewModelFactory(repository)
                         ))
                     }
 
-                    composable("ViewCoins") {
+                    composable("ViewCoins") { //THIS IS NEW HOME
                         ViewCoins(remNavController, viewModel = viewModel(
                             factory = CoinViewModelFactory(repository)
                         ))
