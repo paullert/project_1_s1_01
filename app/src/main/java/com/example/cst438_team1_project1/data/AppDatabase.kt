@@ -27,7 +27,7 @@ https://developer.android.com/training/data-storage/room
         CryptoCoin::class,
         SavePoint::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 

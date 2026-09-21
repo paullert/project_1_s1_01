@@ -14,13 +14,12 @@ interface SavePointDao {
     suspend fun insertSavePoint(savePoint: SavePoint)
 
 
-    //TODO: Make sure there is a cascade to delete all related savePoints
     @Delete
     suspend fun deleteSavePoint(savePoint: SavePoint)
 
     //Update not needed: SavePoint is static
 
-    @Query("SELECT * FROM crypto_save_points WHERE userId = :userId")
+    @Query("SELECT * FROM crypto_save_points WHERE userId = :userId ORDER BY created_at DESC")
     suspend fun findSavePointsByUserId(userId: Int): List<SavePoint>
 
     //When a user is looking at a coin, you might want to know if they’ve already saved it

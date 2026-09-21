@@ -146,7 +146,7 @@ fun SignUpScreen(navController: NavController) {
                 val existingUser = userDao.findByUsername(username)
 
                 if (existingUser != null) {
-                    errorMessage = "Username already exisits."
+                    errorMessage = "Username already exists."
                     return@launch
                 }
 
