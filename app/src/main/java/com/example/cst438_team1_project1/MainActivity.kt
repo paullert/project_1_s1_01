@@ -25,6 +25,7 @@ import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
 import com.example.cst438_team1_project1.viewModels.CoinViewModelFactory
 import com.example.cst438_team1_project1.data.createTestUsers
 import androidx.compose.runtime.collectAsState
+import com.example.cst438_team1_project1.composables.SignUpScreen
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,6 +87,13 @@ class MainActivity : AppCompatActivity() {
                         ViewCoins(remNavController, viewModel = viewModel(
                             factory = CoinViewModelFactory(repository)
                         ))
+                    }
+                    composable("SavePointScreen") {
+//                        ViewCoins(remNavController, viewModel = viewModel(
+//                            //todo: implement a savePointFactory
+////                            factory = CoinViewModelFactory(repository)
+//                        ))
+                        SavePointScreen(remNavController)
                     }
                 }
 

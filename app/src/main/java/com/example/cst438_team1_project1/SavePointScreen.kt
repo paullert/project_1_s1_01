@@ -30,11 +30,11 @@ fun SavePointScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row() {
-            Text("This is the Accounts Screen!")
+            Text("Track your coins here!")
         }
         //todo: make this navigate to add savePoint screen!
         Button(onClick = {
-            navController.navigate("changeUsername")
+            navController.navigate("addSavePoint")
         }
         ) {
             Text("Add SavePoint")

@@ -67,5 +67,12 @@ fun HomeScreen(navController: NavController) { //will eventually also take a par
                 Text("Account")
             }
         }
+        Column() {
+            Button(onClick = {
+                navController.navigate("SavePointScreen")
+            }) {
+                Text("View Tracked Coins")
+            }
+        }
     }
 }
