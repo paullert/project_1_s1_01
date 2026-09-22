@@ -93,7 +93,9 @@ class MainActivity : AppCompatActivity() {
 //                            //todo: implement a savePointFactory
 ////                            factory = CoinViewModelFactory(repository)
 //                        ))
-                        SavePointScreen(remNavController)
+                        SavePointScreen(remNavController, viewModel = viewModel(
+                            //todo put svepointfactory in here!!!
+                        ))
                     }
                 }
 

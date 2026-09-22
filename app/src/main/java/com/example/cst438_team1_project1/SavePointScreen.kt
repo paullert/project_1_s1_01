@@ -16,10 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cst438_team1_project1.data.SessionManager
+import com.example.cst438_team1_project1.viewModels.SavePointViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun SavePointScreen(navController: NavController) {
+fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
