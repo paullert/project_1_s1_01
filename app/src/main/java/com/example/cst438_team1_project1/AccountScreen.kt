@@ -32,12 +32,13 @@ fun AccountScreen(navController: NavController) {
     val sessionManager = remember { SessionManager(context) }
     val coroutineScope = rememberCoroutineScope()
 
-    val database = remember { AppDatabase.getDatabase(context) }
-
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
+                .fillMaxWidth()
                 .padding(top = 80.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -123,5 +124,4 @@ fun AccountScreen(navController: NavController) {
             }
         }
     }
-
 }
