@@ -2,6 +2,7 @@ package com.example.cst438_team1_project1
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.SessionManager
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,77 +33,95 @@ fun AccountScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize()
     ) {
-        Row() {
-            Text("This is the Accounts Screen!")
-        }
-
-        Button(onClick = {
-            navController.navigate("changeUsername")
-        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(top = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Change Username")
-        }
-
-        Button(onClick = {
-            navController.navigate("changePassword")
-        }) {
-            Text("Change Password")
-        }
-
-        Button(onClick = {
-            //delete Account logic here
-        }) {
-            Text("Delete Account")
-        }
-    }
-
-    //NAVIGATION BAR
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(bottom = 40.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column() {
-            Button(onClick = {
-                navController.navigate("ViewCoins")
-            }) {
-                Text("My Coins")
+            Row() {
+                Text("This is the Accounts Screen!")
             }
-        }
-        Column() {
+
             Button(onClick = {
-                navController.navigate("AddCoins")
-            }) {
-                Text("Add Coins")
+                navController.navigate("changeUsername")
             }
-        }
-
-        Column() {
-
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        sessionManager.removeUserId()
-                        navController.navigate("Login") {
-                            popUpTo(0)
-                        }
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB0CEFF),
-                    contentColor = Color.Black)
             ) {
-                Text("Logout")
+                Text("Change Username")
+            }
+
+            Button(onClick = {
+                navController.navigate("changePassword")
+            }) {
+                Text("Change Password")
+            }
+
+            Button(onClick = {
+                coroutineScope.launch {
+                    val userId = sessionManager.readUserId.first()
+
+                    if (userId != null) {
+                        database.savePointDao().deleteByUserId(userId)
+                        database.userDao().deleteUserById(userId)
+                        sessionManager.removeUserId()
+                    }
+
+                    navController.navigate("Login") {
+                        popUpTo(0)
+                    }
+                }
+            }) {
+                Text("Delete Account")
+            }
+        }
+
+        //NAVIGATION BAR
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                }) {
+                    Text("My Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                }) {
+                    Text("Add Coins")
+                }
+            }
+
+            Column() {
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            sessionManager.removeUserId()
+                            navController.navigate("Login") {
+                                popUpTo(0)
+                            }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB0CEFF),
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("Logout")
+                }
             }
         }
     }
-
 }
