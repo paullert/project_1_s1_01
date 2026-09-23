@@ -1,5 +1,6 @@
 package com.example.cst438_team1_project1.composables
 
+import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,7 +35,7 @@ import com.example.cst438_team1_project1.viewModels.SavedCoinsViewModel
 @Composable
 fun ViewCoins(
     navController: NavController,
-    currentUserId: Int = -1,
+    currentUserId: Int,
     viewModel: SavedCoinsViewModel = viewModel()
 ) {
     var query by remember {
@@ -76,6 +77,7 @@ fun ViewCoins(
                         },
                         buttonText = "Remove",
                         secondButtonFunction = {
+                            Log.d("DATABASE_TEST", "Clicked save point. User ID: $currentUserId")
                             viewModel.addSavePoint(coin, currentUserId)
                         },
                         secondButtonText = "Save Point"

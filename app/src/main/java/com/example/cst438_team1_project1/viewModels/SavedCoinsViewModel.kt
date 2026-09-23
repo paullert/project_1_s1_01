@@ -81,18 +81,23 @@ class SavedCoinsViewModel(private val repository: CryptoCoinRepository,private v
         }
     }
 
-    fun addSavePoint(coin: CoinRow, userId: Int){
+    fun addSavePoint(coin: CoinRow, userId: Int) {
         viewModelScope.launch {
             try {
-                if (savePointRepository.addSavePoint(coin.coinId, userId, coin.coinSlug)) {
-                    Log.d("DATABASE_TEST", "Added savePoint for coin: ${coin.coinId}")
-                }
-            }catch(exception: Exception){
-                Log.e(
+                Log.d(
                     "DATABASE_TEST",
-                    "Add savePoint failed",
-                    exception
+                    "Adding save point: coinId=${coin.coinId}, userId=$userId"
                 )
+
+                val added = savePointRepository.addSavePoint(
+                    coin.coinId,
+                    userId,
+                    coin.coinSlug
+                )
+
+                Log.d("DATABASE_TEST", "Save point inserted: $added")
+            } catch (exception: Exception) {
+                Log.e("DATABASE_TEST", "Add savePoint failed", exception)
             }
         }
     }

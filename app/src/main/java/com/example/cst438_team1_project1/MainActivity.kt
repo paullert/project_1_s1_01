@@ -92,13 +92,17 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     composable("ViewCoins") { //THIS IS NEW HOME
-                        ViewCoins(
-                            remNavController,
-                            currentUserId = loggedInUserId ?: -1,
-                            viewModel = viewModel(
-                                factory = CoinViewModelFactory(repository, savePointRepository)
+                        val userId = loggedInUserId
+
+                        if(userId != null) {
+                            ViewCoins(
+                                remNavController,
+                                currentUserId = userId,
+                                viewModel = viewModel(
+                                    factory = CoinViewModelFactory(repository, savePointRepository)
+                                )
                             )
-                        )
+                        }
                     }
                     composable("addSavePoint") {
                         ViewCoins(
@@ -110,11 +114,17 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                     composable("SavePointScreen") {
-                        SavePointScreen(
-                            remNavController, viewModel = viewModel(
-                                factory = SavePointModelFactory(savePointRepository, loggedInUserId ?: -1)
+                        val userId = loggedInUserId
+
+                        if(userId != null){
+                            SavePointScreen(
+                                remNavController, viewModel = viewModel(
+                                    factory = SavePointModelFactory(savePointRepository, userId
+                                )
                             )
-                        )
+                            )
+                        }
+
                     }
                 }
 
