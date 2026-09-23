@@ -30,77 +30,81 @@ fun AccountScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize()
     ) {
-        Row() {
-            Text("This is the Accounts Screen!")
-        }
-
-        Button(onClick = {
-            navController.navigate("changeUsername")
-        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(top = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Change Username")
-        }
-
-        Button(onClick = {
-            navController.navigate("changePassword")
-        }) {
-            Text("Change Password")
-        }
-
-        Button(onClick = {
-            //delete Account logic here
-        }) {
-            Text("Delete Account")
-        }
-    }
-
-    //NAVIGATION BAR
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(bottom = 40.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column() {
-            Button(onClick = {
-                navController.navigate("ViewCoins")
-            }) {
-                Text("My Coins")
+            Row() {
+                Text("This is the Accounts Screen!")
             }
-        }
-        Column() {
+
             Button(onClick = {
-                navController.navigate("AddCoins")
-            }) {
-                Text("Add Coins")
+                navController.navigate("changeUsername")
             }
-        }
-
-        Column() {
-
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        sessionManager.removeUserId()
-                        navController.navigate("Login") {
-                            popUpTo(0)
-                        }
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB0CEFF),
-                    contentColor = Color.Black)
             ) {
-                Text("Logout")
+                Text("Change Username")
+            }
+
+            Button(onClick = {
+                navController.navigate("changePassword")
+            }) {
+                Text("Change Password")
+            }
+
+            Button(onClick = {
+                //delete Account logic here
+            }) {
+                Text("Delete Account")
+            }
+        }
+
+        //NAVIGATION BAR
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                }) {
+                    Text("My Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                }) {
+                    Text("Add Coins")
+                }
+            }
+
+            Column() {
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            sessionManager.removeUserId()
+                            navController.navigate("Login") {
+                                popUpTo(0)
+                            }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB0CEFF),
+                        contentColor = Color.Black)
+                ) {
+                    Text("Logout")
+                }
             }
         }
     }
-
 }
