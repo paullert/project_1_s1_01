@@ -27,7 +27,7 @@ class CryptoCoinRepository (
         return cryptoCoinDao.getAllCoins().map { dbCoin ->
             CoinRow(
                 coinId = dbCoin.coinId,
-                coinSlug = "",
+                coinSlug = dbCoin.coinSlug,
                 coinName = dbCoin.coinName,
                 coinTicker = dbCoin.coinTicker,
                 coinImage = dbCoin.coinImage
@@ -37,6 +37,7 @@ class CryptoCoinRepository (
 
     suspend fun addCoin(coinRow: CoinRow) {
         val dbCoin = CryptoCoin(
+            coinSlug = coinRow.coinSlug,
             coinName = coinRow.coinName,
             coinTicker = coinRow.coinTicker,
             coinImage = coinRow.coinImage
@@ -55,6 +56,7 @@ class CryptoCoinRepository (
     fun convertCoinRow(coinRow: CoinRow): CryptoCoin {
         return CryptoCoin(
             coinId = coinRow.coinId,
+            coinSlug = coinRow.coinSlug,
             coinName = coinRow.coinName,
             coinTicker = coinRow.coinTicker,
             coinImage = coinRow.coinImage,
@@ -65,7 +67,7 @@ class CryptoCoinRepository (
     fun convertDbCoin(dbCoin: CryptoCoin): CoinRow {
         return CoinRow(
             coinId = dbCoin.coinId,
-            coinSlug = "",
+            coinSlug = dbCoin.coinSlug,
             coinName = dbCoin.coinName,
             coinTicker = dbCoin.coinTicker,
             coinImage = dbCoin.coinImage,

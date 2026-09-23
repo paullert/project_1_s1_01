@@ -135,6 +135,13 @@ fun AddCoins(navController: NavController, viewModel: SearchCoinsViewModel = vie
             }
             Column() {
                 Button(onClick = {
+                    navController.navigate("SavePointScreen")
+                }) {
+                    Text("Save Points")
+                }
+            }
+            Column() {
+                Button(onClick = {
                     navController.navigate("Account")
                 }) {
                     Text("Account")

@@ -17,6 +17,8 @@ data class CryptoCoin (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "coin_id")
     val coinId: Int = 0,
+    @ColumnInfo(name = "coin_slug")
+    val coinSlug: String = "",
     @ColumnInfo(name = "coin_name")
     val coinName: String,
     @ColumnInfo(name = "coin_ticker")

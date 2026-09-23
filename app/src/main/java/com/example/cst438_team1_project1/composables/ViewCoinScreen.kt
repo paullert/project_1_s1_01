@@ -1,5 +1,6 @@
 package com.example.cst438_team1_project1.composables
 
+import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,11 @@ import androidx.navigation.NavController
 import com.example.cst438_team1_project1.viewModels.SavedCoinsViewModel
 
 @Composable
-fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = viewModel()) {
+fun ViewCoins(
+    navController: NavController,
+    currentUserId: Int,
+    viewModel: SavedCoinsViewModel = viewModel()
+) {
     var query by remember {
         mutableStateOf("")
     }
@@ -70,7 +75,12 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
                         buttonFunction = {
                             viewModel.removeCoin(coin)
                         },
-                        buttonText = "Remove"
+                        buttonText = "Remove",
+                        secondButtonFunction = {
+                            Log.d("DATABASE_TEST", "Clicked save point. User ID: $currentUserId")
+                            viewModel.addSavePoint(coin, currentUserId)
+                        },
+                        secondButtonText = "Save Point"
                     )
                 }
             }
@@ -106,6 +116,13 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
             }
             Column() {
                 Button(onClick = {
+                    navController.navigate("SavePointScreen")
+                }) {
+                    Text("Save Points")
+                }
+            }
+            Column() {
+                Button(onClick = {
                     navController.navigate("Account")
                 }) {
                     Text("Account")
@@ -114,4 +131,3 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
         }
     }
 }
-

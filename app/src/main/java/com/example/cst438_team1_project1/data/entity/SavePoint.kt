@@ -3,6 +3,7 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
+import androidx.room3.Index
 import androidx.room3.PrimaryKey
 
 
@@ -13,12 +14,19 @@ import androidx.room3.PrimaryKey
 
 
 //Foreign Key creates Relationship between SavePoint and User+CryptoCoin
-@Entity(tableName = "crypto_save_points",
+@Entity(
+    tableName = "crypto_save_points",
+    indices = [
+        Index(value = ["userId"]),
+        Index(value = ["coinId"])
+    ],
     foreignKeys = [
-        ForeignKey(entity = User::class,
+        ForeignKey(
+            entity = User::class,
             parentColumns = ["userId"],
             childColumns = ["userId"],
-            onDelete = ForeignKey.CASCADE),
+            onDelete = ForeignKey.CASCADE
+        ),
         ForeignKey(
             entity = CryptoCoin::class,
             parentColumns = ["coin_id"],
@@ -26,12 +34,14 @@ import androidx.room3.PrimaryKey
             onDelete = ForeignKey.CASCADE
         )
     ]
-    )
-data class SavePoint (
+)
+data class SavePoint(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "save_point_id")
-    val savePointId: Int,
+    val savePointId: Int = 0,
     val coinId: Int,
     val userId: Int,
     val valueSnapshot: String,
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long = System.currentTimeMillis()
 )

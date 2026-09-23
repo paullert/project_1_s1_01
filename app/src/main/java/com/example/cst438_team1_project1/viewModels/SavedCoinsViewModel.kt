@@ -3,9 +3,8 @@ package com.example.cst438_team1_project1.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cst438_team1_project1.BuildConfig
 import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
-import com.example.cst438_team1_project1.data.entity.CryptoCoin
+import com.example.cst438_team1_project1.data.api.SavePointRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +24,7 @@ data class SavedCoinsUiState(
     val error: String? = null
 )
 
-class SavedCoinsViewModel(private val repository: CryptoCoinRepository) : ViewModel() {
+class SavedCoinsViewModel(private val repository: CryptoCoinRepository,private val savePointRepository: SavePointRepository) : ViewModel() {
     private var _uiState = MutableStateFlow(SavedCoinsUiState())
     val uiState: StateFlow<SavedCoinsUiState> = _uiState.asStateFlow()
 
@@ -81,4 +80,27 @@ class SavedCoinsViewModel(private val repository: CryptoCoinRepository) : ViewMo
             }
         }
     }
+
+    fun addSavePoint(coin: CoinRow, userId: Int) {
+        viewModelScope.launch {
+            try {
+                Log.d(
+                    "DATABASE_TEST",
+                    "Adding save point: coinId=${coin.coinId}, userId=$userId"
+                )
+
+                val added = savePointRepository.addSavePoint(
+                    coin.coinId,
+                    userId,
+                    coin.coinSlug
+                )
+
+                Log.d("DATABASE_TEST", "Save point inserted: $added")
+            } catch (exception: Exception) {
+                Log.e("DATABASE_TEST", "Add savePoint failed", exception)
+            }
+        }
+    }
+
+
 }
