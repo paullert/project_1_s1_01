@@ -2,7 +2,6 @@ package com.example.cst438_team1_project1
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AccountScreen(navController: NavController) {
     val context = LocalContext.current
+    val database = remember { AppDatabase.getDatabase(context) }
     val sessionManager = remember { SessionManager(context) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -81,7 +81,7 @@ fun AccountScreen(navController: NavController) {
         //NAVIGATION BAR
         Row(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState())
                 .padding(bottom = 40.dp),
@@ -100,6 +100,13 @@ fun AccountScreen(navController: NavController) {
                     navController.navigate("AddCoins")
                 }) {
                     Text("Add Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("SavePointScreen")
+                }) {
+                    Text("Save Points")
                 }
             }
 

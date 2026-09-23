@@ -71,7 +71,7 @@ fun HomeScreen(navController: NavController) { //will eventually also take a par
             Button(onClick = {
                 navController.navigate("SavePointScreen")
             }) {
-                Text("View Tracked Coins")
+                Text("Save Points")
             }
         }
     }
