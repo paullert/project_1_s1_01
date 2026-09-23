@@ -2,6 +2,7 @@ package com.example.cst438_team1_project1
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.SessionManager
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,7 +60,19 @@ fun AccountScreen(navController: NavController) {
             }
 
             Button(onClick = {
-                //delete Account logic here
+                coroutineScope.launch {
+                    val userId = sessionManager.readUserId.first()
+
+                    if (userId != null) {
+                        database.savePointDao().deleteByUserId(userId)
+                        database.userDao().deleteUserById(userId)
+                        sessionManager.removeUserId()
+                    }
+
+                    navController.navigate("Login") {
+                        popUpTo(0)
+                    }
+                }
             }) {
                 Text("Delete Account")
             }
@@ -66,6 +81,7 @@ fun AccountScreen(navController: NavController) {
         //NAVIGATION BAR
         Row(
             modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState())
                 .padding(bottom = 40.dp),
@@ -100,7 +116,8 @@ fun AccountScreen(navController: NavController) {
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFB0CEFF),
-                        contentColor = Color.Black)
+                        contentColor = Color.Black
+                    )
                 ) {
                     Text("Logout")
                 }

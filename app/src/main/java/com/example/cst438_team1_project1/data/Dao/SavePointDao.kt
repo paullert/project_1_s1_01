@@ -34,4 +34,7 @@ interface SavePointDao {
     //STRICTLY FOR TESTING -->
     @Query("SELECT * FROM crypto_save_points")
     suspend fun getAllSavePoints(): List<SavePoint>
+
+    @Query("DELETE FROM crypto_save_points WHERE userId = :userId")
+    suspend fun deleteByUserId(userId: Int)
 }
