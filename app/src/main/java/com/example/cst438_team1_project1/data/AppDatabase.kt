@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room3.Database
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
+import androidx.room3.migration.Migration
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 import com.example.cst438_team1_project1.data.Dao.CryptoCoinDao
@@ -27,7 +28,7 @@ https://developer.android.com/training/data-storage/room
         CryptoCoin::class,
         SavePoint::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 
@@ -41,6 +42,13 @@ abstract class AppDatabase : RoomDatabase() {
         //volatile helps so multiple databases are created on different threads
         @Volatile
         private var INSTANCE: AppDatabase? = null
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override suspend fun migrate(connection: SQLiteConnection) {
+                connection.execSQL(
+                    "ALTER TABLE crypto_coins ADD COLUMN coin_slug TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
         //only AppDatabase can access this priv var. initially when app opened database is null
 
         fun getDatabase(context: Context): AppDatabase {
@@ -55,6 +63,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,//room doesn't know which database to build so we tell it which one
                 "userDatabase"
             )
+                .addMigrations(MIGRATION_5_6)
                 .fallbackToDestructiveMigration(true)
                 .addCallback(object : RoomDatabase.Callback() {
                     override suspend fun onCreate(db: SQLiteConnection) {

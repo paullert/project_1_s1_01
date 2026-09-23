@@ -41,8 +41,11 @@ class CoinScreensTest {
         override suspend fun getCoinPricesByName(name: String) =
             SearchCoinsResponse(emptyList())
 
-        override suspend fun getCoinPricesByID(ids: String) =
-            SearchCoinsResponse(emptyList())
+        override suspend fun getCoinPricesByID(
+            ids: String,
+            vsCurrencies: String,
+            apiKey: String
+        ) = emptyMap<String, Map<String, Double>>()
 
         override suspend fun getCoinPricesBySymbol(symbols: String) =
             SearchCoinsResponse(emptyList())

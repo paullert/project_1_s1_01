@@ -3,11 +3,8 @@ package com.example.cst438_team1_project1.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cst438_team1_project1.BuildConfig
 import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
 import com.example.cst438_team1_project1.data.api.SavePointRepository
-import com.example.cst438_team1_project1.data.entity.CryptoCoin
-import com.example.cst438_team1_project1.data.entity.SavePoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -84,11 +81,11 @@ class SavedCoinsViewModel(private val repository: CryptoCoinRepository,private v
         }
     }
 
-    fun addSavePoint(savePoint: SavePoint){
+    fun addSavePoint(coin: CoinRow, userId: Int){
         viewModelScope.launch {
             try {
-                if (savePointRepository.addSavePoint(savePoint)) {
-                    Log.d("DATABASE_TEST", "Added savePoint for coin: ${savePoint.coinId}")
+                if (savePointRepository.addSavePoint(coin.coinId, userId, coin.coinSlug)) {
+                    Log.d("DATABASE_TEST", "Added savePoint for coin: ${coin.coinId}")
                 }
             }catch(exception: Exception){
                 Log.e(

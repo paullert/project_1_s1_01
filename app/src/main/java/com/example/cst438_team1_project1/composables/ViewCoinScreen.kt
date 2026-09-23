@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.cst438_team1_project1.data.entity.SavePoint
 import com.example.cst438_team1_project1.viewModels.SavedCoinsViewModel
 
 @Composable
@@ -77,13 +76,7 @@ fun ViewCoins(
                         },
                         buttonText = "Remove",
                         secondButtonFunction = {
-                            viewModel.addSavePoint(
-                                SavePoint(
-                                    coinId = coin.coinId,
-                                    userId = currentUserId,
-                                    valueSnapshot = ""
-                                )
-                            )
+                            viewModel.addSavePoint(coin, currentUserId)
                         },
                         secondButtonText = "Save Point"
                     )

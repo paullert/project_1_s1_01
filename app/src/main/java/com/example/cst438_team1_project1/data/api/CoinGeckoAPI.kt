@@ -29,8 +29,10 @@ interface CoinGeckoAPI {
     // EX: "etherium"
     @GET("simple/price")
     suspend fun getCoinPricesByID(
-        @Query("ids") ids: String
-    ): SearchCoinsResponse
+        @Query("ids") ids: String,
+        @Query("vs_currencies") vsCurrencies: String,
+        @Header("x-cg-demo-api-key") apiKey: String
+    ): Map<String, Map<String, Double>>
 
     // Retrieves Coin prices via Ticker (3-4 letter combo)
     // Can be 1 or many, no spaces

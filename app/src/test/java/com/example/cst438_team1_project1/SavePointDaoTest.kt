@@ -139,8 +139,12 @@ private object RetrofitClientDummy : com.example.cst438_team1_project1.data.api.
         return searchCoins("", "")
     }
 
-    override suspend fun getCoinPricesByID(ids: String): com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {
-        return searchCoins("", "")
+    override suspend fun getCoinPricesByID(
+        ids: String,
+        vsCurrencies: String,
+        apiKey: String
+    ): Map<String, Map<String, Double>> {
+        return emptyMap()
     }
 
     override suspend fun getCoinPricesBySymbol(symbols: String): com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {

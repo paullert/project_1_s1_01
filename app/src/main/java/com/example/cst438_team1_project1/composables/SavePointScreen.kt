@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.cst438_team1_project1.viewModels.SavePointViewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel) {
@@ -64,8 +66,15 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
             ) {
                 items(
                     items = state.result,
-                    key = { savePoint -> savePoint.savePointId }
-                ) { savePoint ->
+                    key = { savePointWithCoin -> savePointWithCoin.savePoint.savePointId }
+                ) { savePointWithCoin ->
+                    val savePoint = savePointWithCoin.savePoint
+                    val displayCoinId = savePointWithCoin.coinSlug.ifBlank {
+                        savePointWithCoin.coinName.ifBlank {
+                            savePoint.coinId.toString()
+                        }
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -75,10 +84,12 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
                     ) {
                         Column {
                             Text(
-                                text = "Coin ID: ${savePoint.coinId}",
+                                text = "${savePointWithCoin.coinName} (${savePointWithCoin.coinTicker})",
                                 fontWeight = FontWeight.Bold
                             )
-                            Text(text = "Value: $${savePoint.valueSnapshot}")
+                            Text(text = "Coin ID: $displayCoinId")
+                            Text(text = "Saved Price: ${formatUsdPrice(savePoint.valueSnapshot)}")
+                            Text(text = "Price Now: ${formatUsdPrice(savePointWithCoin.currentPriceSnapshot)}")
                         }
 
                         Button(
@@ -138,4 +149,9 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
             }
         }
     }
+}
+
+private fun formatUsdPrice(price: String): String {
+    val priceValue = price.toDoubleOrNull() ?: return "Unavailable"
+    return NumberFormat.getCurrencyInstance(Locale.US).format(priceValue)
 }
