@@ -40,70 +40,76 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize()
     ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
-        Row() {
-            Text("Saved Coins", fontSize = 40.sp, fontWeight = FontWeight.Bold)
-        }
+            Row() {
+                Text("Saved Coins", fontSize = 40.sp, fontWeight = FontWeight.Bold)
+            }
 
-        Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(100.dp))
 
-        state.error?.let { errorMessage ->
-            Text(errorMessage)
-        }
+            state.error?.let { errorMessage ->
+                Text(errorMessage)
+            }
 
-        LazyColumn {
-            items(
-                items = state.result,
-                key = { coin -> coin.coinName }
-            ) { coin ->
-                CoinRow(
-                    coinRow = coin,
-                    buttonFunction = {
-                        viewModel.removeCoin(coin)
-                    },
-                    buttonText = "Remove"
-                )
+            LazyColumn {
+                items(
+                    items = state.result,
+                    key = { coin -> coin.coinName }
+                ) { coin ->
+                    CoinRow(
+                        coinRow = coin,
+                        buttonFunction = {
+                            viewModel.removeCoin(coin)
+                        },
+                        buttonText = "Remove"
+                    )
+                }
             }
         }
-    }
 
-    //NAVIGATION BAR
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(bottom = 40.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column() {
-            Button(onClick = {
-                navController.navigate("ViewCoins")
-            },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFC8BBE7),
-                    contentColor = Color.Black
-                )
-                ) {
-                Text("My Coins")
+        //NAVIGATION BAR
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFC8BBE7),
+                        contentColor = Color.Black
+                    )
+                    ) {
+                    Text("My Coins")
+                }
             }
-        }
-        Column() {
-            Button(onClick = {
-                navController.navigate("AddCoins")
-            }) {
-                Text("Add Coins")
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                }) {
+                    Text("Add Coins")
+                }
             }
-        }
-        Column() {
-            Button(onClick = {
-                navController.navigate("Account")
-            }) {
-                Text("Account")
+            Column() {
+                Button(onClick = {
+                    navController.navigate("Account")
+                }) {
+                    Text("Account")
+                }
             }
         }
     }

@@ -41,98 +41,104 @@ fun AddCoins(navController: NavController, viewModel: SearchCoinsViewModel = vie
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize()
     ) {
-
-        Row(){
-            Text("Search for Crypto Coins",
-                fontSize = 35.sp,
-                fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.height(100.dp))
-
-        TextField(
-            value = query,
-            onValueChange = { newText ->
-                query = newText
-            },
-            label = {
-                Text("Enter Coin")
-            }
-        )
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-        Button(
-            onClick = {
-                viewModel.searchCoins(query)
-            },
-            enabled = query.isNotBlank() && !state.isLoading
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                if (state.isLoading) {
-                    "Searching..."
-                } else {
-                    "Search"
+
+            Row(){
+                Text("Search for Crypto Coins",
+                    fontSize = 35.sp,
+                    fontWeight = FontWeight.Bold)
+            }
+
+            Spacer(modifier = Modifier.height(100.dp))
+
+            TextField(
+                value = query,
+                onValueChange = { newText ->
+                    query = newText
+                },
+                label = {
+                    Text("Enter Coin")
                 }
             )
-        }
 
-        state.error?.let { errorMessage ->
-            Text(errorMessage)
-        }
+            Spacer(modifier = Modifier.height(15.dp))
 
-        LazyColumn {
-            items(
-                items = state.result,
-                key = { coin -> coin.coinName }
-            ) { coin ->
-                CoinRow(
-                    coinRow = coin,
-                    buttonFunction = {
-                        viewModel.addCoin(coin)
-                    },
-                    buttonText = "Add"
+            Button(
+                onClick = {
+                    viewModel.searchCoins(query)
+                },
+                enabled = query.isNotBlank() && !state.isLoading
+            ) {
+                Text(
+                    if (state.isLoading) {
+                        "Searching..."
+                    } else {
+                        "Search"
+                    }
                 )
             }
-        }
-    }
 
-    //NAVIGATION BAR
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-            .padding(bottom = 40.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column() {
-            Button(onClick = {
-                navController.navigate("ViewCoins")
-            }) {
-                Text("My Coins")
+            state.error?.let { errorMessage ->
+                Text(errorMessage)
+            }
+
+            LazyColumn {
+                items(
+                    items = state.result,
+                    key = { coin -> coin.coinName }
+                ) { coin ->
+                    CoinRow(
+                        coinRow = coin,
+                        buttonFunction = {
+                            viewModel.addCoin(coin)
+                        },
+                        buttonText = "Add"
+                    )
+                }
             }
         }
-        Column() {
-            Button(onClick = {
-                navController.navigate("AddCoins")
-            },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFC8BBE7),
-                    contentColor = Color.Black
-                )) {
-                Text("Add Coins")
+
+        //NAVIGATION BAR
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(bottom = 40.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column() {
+                Button(onClick = {
+                    navController.navigate("ViewCoins")
+                }) {
+                    Text("My Coins")
+                }
             }
-        }
-        Column() {
-            Button(onClick = {
-                navController.navigate("Account")
-            }) {
-                Text("Account")
+            Column() {
+                Button(onClick = {
+                    navController.navigate("AddCoins")
+                },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFC8BBE7),
+                        contentColor = Color.Black
+                    )) {
+                    Text("Add Coins")
+                }
+            }
+            Column() {
+                Button(onClick = {
+                    navController.navigate("Account")
+                }) {
+                    Text("Account")
+                }
             }
         }
     }
