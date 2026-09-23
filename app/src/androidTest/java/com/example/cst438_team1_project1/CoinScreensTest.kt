@@ -12,6 +12,7 @@ import com.example.cst438_team1_project1.composables.ViewCoins
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.api.CoinGeckoAPI
 import com.example.cst438_team1_project1.data.api.CryptoCoinRepository
+import com.example.cst438_team1_project1.data.api.SavePointRepository
 import com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse
 import com.example.cst438_team1_project1.data.entity.CryptoCoin
 import com.example.cst438_team1_project1.viewModels.CoinViewModelFactory
@@ -31,6 +32,7 @@ class CoinScreensTest {
 
     private lateinit var database: AppDatabase
     private lateinit var repository: CryptoCoinRepository
+    private lateinit var savePointRepository: SavePointRepository
 
     private val fakeApi = object : CoinGeckoAPI {
         override suspend fun searchCoins(query: String, apiKey: String) =
@@ -52,6 +54,11 @@ class CoinScreensTest {
             .setDriver(BundledSQLiteDriver())
             .build()
         repository = CryptoCoinRepository(fakeApi, database.cryptoCoinDao())
+        savePointRepository = SavePointRepository(
+            coinGeckoAPI = fakeApi,
+            cryptoCoinDao = database.cryptoCoinDao(),
+            savePointDao = database.savePointDao()
+        )
     }
 
     @After
@@ -87,7 +94,9 @@ class CoinScreensTest {
         composeTestRule.setContent {
             ViewCoins(
                 navController = rememberNavController(),
-                viewModel = viewModel(factory = CoinViewModelFactory(repository))
+                viewModel = viewModel(
+                    factory = CoinViewModelFactory(repository, savePointRepository)
+                )
             )
         }
 

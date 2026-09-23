@@ -15,6 +15,15 @@ class SavePointRepository(
         return response;
     }
 
+    suspend fun addSavePoint(savePoint: SavePoint): Boolean {
+        return try {
+            savePointDao.insertSavePoint(savePoint)
+            true
+        } catch (exception: Exception) {
+            false
+        }
+    }
+
     suspend fun deleteSavePoint(savePoint: SavePoint){
         val deletedId = savePointDao.deleteSavePoint(savePoint)
         Log.d("DATABASE_TEST", "Removed savePoint with ID: $deletedId")

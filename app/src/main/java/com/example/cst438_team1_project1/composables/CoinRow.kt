@@ -11,7 +11,13 @@ import coil3.compose.AsyncImage
 import com.example.cst438_team1_project1.viewModels.CoinRow
 
 @Composable
-fun CoinRow(coinRow: CoinRow, buttonFunction: () -> Unit, buttonText: String) {
+fun CoinRow(
+    coinRow: CoinRow,
+    buttonFunction: () -> Unit,
+    buttonText: String,
+    secondButtonFunction: (() -> Unit)? = null,
+    secondButtonText: String? = null
+) {
     Row() {
         AsyncImage(
             model = coinRow.coinImage,
@@ -29,6 +35,16 @@ fun CoinRow(coinRow: CoinRow, buttonFunction: () -> Unit, buttonText: String) {
             }
         ) {
             Text(buttonText)
+        }
+
+        if (secondButtonFunction != null && secondButtonText != null) {
+            Button(
+                onClick = {
+                    secondButtonFunction()
+                }
+            ) {
+                Text(secondButtonText)
+            }
         }
     }
 }

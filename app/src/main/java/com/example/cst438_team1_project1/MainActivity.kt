@@ -92,9 +92,22 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     composable("ViewCoins") { //THIS IS NEW HOME
-                        ViewCoins(remNavController, viewModel = viewModel(
-                            factory = CoinViewModelFactory(repository)
-                        ))
+                        ViewCoins(
+                            remNavController,
+                            currentUserId = loggedInUserId ?: -1,
+                            viewModel = viewModel(
+                                factory = CoinViewModelFactory(repository, savePointRepository)
+                            )
+                        )
+                    }
+                    composable("addSavePoint") {
+                        ViewCoins(
+                            remNavController,
+                            currentUserId = loggedInUserId ?: -1,
+                            viewModel = viewModel(
+                                factory = CoinViewModelFactory(repository, savePointRepository)
+                            )
+                        )
                     }
                     composable("SavePointScreen") {
                         SavePointScreen(

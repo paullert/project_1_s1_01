@@ -29,10 +29,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.cst438_team1_project1.data.entity.SavePoint
 import com.example.cst438_team1_project1.viewModels.SavedCoinsViewModel
 
 @Composable
-fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = viewModel()) {
+fun ViewCoins(
+    navController: NavController,
+    currentUserId: Int = -1,
+    viewModel: SavedCoinsViewModel = viewModel()
+) {
     var query by remember {
         mutableStateOf("")
     }
@@ -70,7 +75,17 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
                         buttonFunction = {
                             viewModel.removeCoin(coin)
                         },
-                        buttonText = "Remove"
+                        buttonText = "Remove",
+                        secondButtonFunction = {
+                            viewModel.addSavePoint(
+                                SavePoint(
+                                    coinId = coin.coinId,
+                                    userId = currentUserId,
+                                    valueSnapshot = ""
+                                )
+                            )
+                        },
+                        secondButtonText = "Save Point"
                     )
                 }
             }
@@ -121,4 +136,3 @@ fun ViewCoins(navController: NavController, viewModel: SavedCoinsViewModel = vie
         }
     }
 }
-
