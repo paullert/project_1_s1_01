@@ -26,6 +26,8 @@ import com.example.cst438_team1_project1.viewModels.CoinViewModelFactory
 import com.example.cst438_team1_project1.data.createTestUsers
 import androidx.compose.runtime.collectAsState
 import com.example.cst438_team1_project1.composables.SavePointScreen
+import com.example.cst438_team1_project1.data.api.SavePointRepository
+import com.example.cst438_team1_project1.viewModels.SavePointModelFactory
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,12 @@ class MainActivity : AppCompatActivity() {
         val repository = CryptoCoinRepository(
             coinGeckoAPI = RetrofitClient.coinGeckoAPI,
             cryptoCoinDao = database.cryptoCoinDao()
+        )
+
+        val savePointRepository = SavePointRepository(
+            coinGeckoAPI = RetrofitClient.coinGeckoAPI,
+            cryptoCoinDao = database.cryptoCoinDao(),
+            savePointDao = database.savePointDao()
         )
 
         lifecycleScope.launch {
@@ -89,13 +97,9 @@ class MainActivity : AppCompatActivity() {
                         ))
                     }
                     composable("SavePointScreen") {
-//                        ViewCoins(remNavController, viewModel = viewModel(
-//                            //todo: implement a savePointFactory
-////                            factory = CoinViewModelFactory(repository)
-//                        ))
                         SavePointScreen(
                             remNavController, viewModel = viewModel(
-                                //todo put svepointfactory in here!!!
+                                factory = SavePointModelFactory(savePointRepository, loggedInUserId ?: -1)
                             )
                         )
                     }
