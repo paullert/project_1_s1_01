@@ -24,7 +24,10 @@ data class SavedCoinsUiState(
     val error: String? = null
 )
 
-class SavedCoinsViewModel(private val repository: CryptoCoinRepository,private val savePointRepository: SavePointRepository) : ViewModel() {
+class SavedCoinsViewModel(
+    private val repository: CryptoCoinRepository,
+    private val savePointRepository: SavePointRepository
+) : ViewModel() {
     private var _uiState = MutableStateFlow(SavedCoinsUiState())
     val uiState: StateFlow<SavedCoinsUiState> = _uiState.asStateFlow()
 
@@ -101,6 +104,4 @@ class SavedCoinsViewModel(private val repository: CryptoCoinRepository,private v
             }
         }
     }
-
-
 }

@@ -4,8 +4,6 @@ import androidx.room3.Dao
 import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.Query
-import androidx.room3.Update
-import com.example.cst438_team1_project1.data.entity.CryptoCoin
 import com.example.cst438_team1_project1.data.entity.SavePoint
 
 @Dao

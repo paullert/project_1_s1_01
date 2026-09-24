@@ -48,9 +48,9 @@ class CryptoCoinRepository (
     }
 
     suspend fun removeCoin(coinRow: CoinRow) {
-        val deleted_id = cryptoCoinDao.deleteCoin(convertCoinRow(coinRow))
+        val deletedId = cryptoCoinDao.deleteCoin(convertCoinRow(coinRow))
 
-        Log.d("DATABASE_TEST", "Removed coin with ID: $deleted_id")
+        Log.d("DATABASE_TEST", "Removed coin with ID: $deletedId")
     }
 
     fun convertCoinRow(coinRow: CoinRow): CryptoCoin {
@@ -60,17 +60,6 @@ class CryptoCoinRepository (
             coinName = coinRow.coinName,
             coinTicker = coinRow.coinTicker,
             coinImage = coinRow.coinImage,
-        )
-    }
-
-    // TODO: Implement use or remove
-    fun convertDbCoin(dbCoin: CryptoCoin): CoinRow {
-        return CoinRow(
-            coinId = dbCoin.coinId,
-            coinSlug = dbCoin.coinSlug,
-            coinName = dbCoin.coinName,
-            coinTicker = dbCoin.coinTicker,
-            coinImage = dbCoin.coinImage,
         )
     }
 }

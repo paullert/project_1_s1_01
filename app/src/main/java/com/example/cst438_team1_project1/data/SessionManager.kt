@@ -44,7 +44,4 @@ class SessionManager(context: Context) {
             preferences.remove(loggedInUserIdKey)
         }
     }
-
-    //TODO REMOVEUSERID FOR LOGOUT
-
 }
