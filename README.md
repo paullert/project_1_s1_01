@@ -135,4 +135,4 @@ Video Presentation: [Drive Link](https://drive.google.com/file/d/1lYW6xCc8fCTQXm
 [AndroidStudio]: https://img.shields.io/badge/Android%20Studio-000000?style=for-the-badge&logo=androidstudio&logoColor=34a853
 [Compose]: https://img.shields.io/badge/Compose-20232A?style=for-the-badge&logo=jetpackcompose&logoColor=34a853
 [Room3]: https://img.shields.io/badge/Room%203-000000?style=for-the-badge&logo=android&logoColor=34a853
-[SQLite]: https://img.shields.io/badge/sql-ffffff?style=for-the-badge&logo=sqlite&logoColor=044a64
+[SQLite]: https://img.shields.io/badge/sqlite-ffffff?style=for-the-badge&logo=sqlite&logoColor=044a64
