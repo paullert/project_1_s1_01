@@ -1,4 +1,4 @@
-package com.example.cst438_team1_project1
+package com.example.cst438_team1_project1.composables
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -111,7 +111,6 @@ fun AccountScreen(navController: NavController) {
             }
 
             Column() {
-
                 Button(
                     onClick = {
                         coroutineScope.launch {

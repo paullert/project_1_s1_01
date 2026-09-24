@@ -1,4 +1,4 @@
-package com.example.cst438_team1_project1
+package com.example.cst438_team1_project1.composables
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.TextStyle
 import com.example.cst438_team1_project1.data.SessionManager
 
 @Composable
@@ -41,9 +40,9 @@ fun SignUpScreen(navController: NavController) {
     var pass2 by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    var context = LocalContext.current
+    val context = LocalContext.current
     val sessionManager = remember { SessionManager(context) }
-    var coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     //got help from gemini with coroutine scope
 
     Column(

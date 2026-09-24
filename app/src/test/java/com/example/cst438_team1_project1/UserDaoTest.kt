@@ -1,15 +1,12 @@
 package com.example.cst438_team1_project1
 
-import android.content.Context
 import androidx.room3.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import androidx.test.core.app.ApplicationProvider
 import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.Dao.UserDao
 import com.example.cst438_team1_project1.data.entity.User
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before

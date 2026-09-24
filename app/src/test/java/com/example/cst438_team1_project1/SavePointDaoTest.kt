@@ -135,7 +135,8 @@ private object RetrofitClientDummy : com.example.cst438_team1_project1.data.api.
         )
     }
 
-    override suspend fun getCoinPricesByName(name: String): com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {
+    override suspend fun getCoinPricesByName(name: String):
+            com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {
         return searchCoins("", "")
     }
 
@@ -147,7 +148,8 @@ private object RetrofitClientDummy : com.example.cst438_team1_project1.data.api.
         return emptyMap()
     }
 
-    override suspend fun getCoinPricesBySymbol(symbols: String): com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {
+    override suspend fun getCoinPricesBySymbol(symbols: String):
+            com.example.cst438_team1_project1.data.api.api_responses.SearchCoinsResponse {
         return searchCoins("", "")
     }
 }

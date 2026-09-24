@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     id("androidx.room3")
+    id("pmd")
+    id("dev.detekt")
 }
 
 android {
@@ -96,8 +98,26 @@ dependencies {
     testImplementation(libs.androidx.sqlite.jvm.bundled)
 }
 
+tasks.named("check") {
+    dependsOn(tasks.withType<Test>())
+    dependsOn("connectedDebugAndroidTest")
+}
+
 room3 {
     schemaDirectory("$projectDir/schemas")
+}
+
+detekt {
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    ignoreFailures = false
+}
+
+pmd {
+    toolVersion = "7.19.0"
+//    ruleSetFiles = files("custom-pmd-ruleset.xml")
+//    ruleSets = intArrayOf()
+    isIgnoreFailures = false
 }
 
 //Below Code is used to populate app with API Key
