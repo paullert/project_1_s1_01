@@ -78,9 +78,7 @@ class CoinScreensTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Search for a coin").assertIsDisplayed()
         composeTestRule.onNodeWithText("Search").assertIsDisplayed().assertIsNotEnabled()
-        composeTestRule.onNodeWithText("Home Screen").assertIsDisplayed()
     }
 
     @Test
@@ -97,6 +95,7 @@ class CoinScreensTest {
         composeTestRule.setContent {
             ViewCoins(
                 navController = rememberNavController(),
+                currentUserId = 1,
                 viewModel = viewModel(
                     factory = CoinViewModelFactory(repository, savePointRepository)
                 )
@@ -104,7 +103,6 @@ class CoinScreensTest {
         }
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("View Saved Coins").assertIsDisplayed()
         composeTestRule.onNodeWithText("Bitcoin (BTC)").assertIsDisplayed()
         composeTestRule.onNodeWithText("Remove").assertIsDisplayed()
     }

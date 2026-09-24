@@ -19,12 +19,6 @@ data class CoinRow (
     val coinImage: String
 )
 
-data class SearchUiState(
-    val isLoading: Boolean = false,
-    val result: List<CoinRow> = emptyList(),
-    val error: String? = null
-)
-
 class SearchCoinsViewModel(private val repository: CryptoCoinRepository) : ViewModel() {
     private var _uiState = MutableStateFlow(SavedCoinsUiState())
     val uiState: StateFlow<SavedCoinsUiState> = _uiState.asStateFlow()

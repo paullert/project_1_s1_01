@@ -1,5 +1,6 @@
-package com.example.cst438_team1_project1.data
+package com.example.cst438_team1_project1
 
+import com.example.cst438_team1_project1.data.AppDatabase
 import com.example.cst438_team1_project1.data.entity.User
 
 suspend fun createTestUsers(database: AppDatabase) {
