@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -53,83 +54,84 @@ class MainActivity : AppCompatActivity() {
         }
         setContent {
             // Used to search API, generate an in-app list, and add values to coin table
+            CryptoTheme {
+                val sessionManager = remember { SessionManager(this@MainActivity) }
+                val loggedInUserId by sessionManager.readUserId.collectAsState(initial = null)
+                val startDestination = if (loggedInUserId != null) { "ViewCoins" } else { "Login" }
 
-            val sessionManager = remember { SessionManager(this@MainActivity) }
-            val loggedInUserId by sessionManager.readUserId.collectAsState(initial = null)
-            val startDestination = if (loggedInUserId != null) { "ViewCoins" } else { "Login" }
 
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) { //screen was black so added default background color
+                    val remNavController = rememberNavController()
+                    NavHost(
+                        navController = remNavController,
+                        startDestination = startDestination
+                    )
+                    {
+                        composable("Login") {
+                            LoginScreen(remNavController)
+                        }
+                        composable("SignUp") {
+                            SignUpScreen(remNavController)
+                        }
+                        composable("Account") {
+                            AccountScreen(remNavController)
+                        }
+                        composable("changeUsername") {
+                            ChangeUsernameScreen(remNavController)
+                        }
+                        composable("changePassword") {
+                            ChangePasswordScreen(remNavController)
+                        }
+                        // Added through separate file with compose function
+                        composable("AddCoins") { //ADD COINS is same as Explore
+                            AddCoins(remNavController, viewModel = viewModel(
+                                factory = CoinViewModelFactory(repository)
+                            ))
+                        }
 
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = Color.White
-            ) { //screen was black so added default background color
-                val remNavController = rememberNavController()
-                NavHost(
-                    navController = remNavController,
-                    startDestination = startDestination
-                )
-                {
-                    composable("Login") {
-                        LoginScreen(remNavController)
-                    }
-                    composable("SignUp") {
-                        SignUpScreen(remNavController)
-                    }
-                    composable("Account") {
-                        AccountScreen(remNavController)
-                    }
-                    composable("changeUsername") {
-                        ChangeUsernameScreen(remNavController)
-                    }
-                    composable("changePassword") {
-                        ChangePasswordScreen(remNavController)
-                    }
-                    // Added through separate file with compose function
-                    composable("AddCoins") { //ADD COINS is same as Explore
-                        AddCoins(remNavController, viewModel = viewModel(
-                            factory = CoinViewModelFactory(repository)
-                        ))
-                    }
+                        composable("ViewCoins") { //THIS IS NEW HOME
+                            val userId = loggedInUserId
 
-                    composable("ViewCoins") { //THIS IS NEW HOME
-                        val userId = loggedInUserId
-
-                        if(userId != null) {
+                            if(userId != null) {
+                                ViewCoins(
+                                    remNavController,
+                                    currentUserId = userId,
+                                    viewModel = viewModel(
+                                        factory = CoinViewModelFactory(repository, savePointRepository)
+                                    )
+                                )
+                            }
+                        }
+                        composable("addSavePoint") {
                             ViewCoins(
                                 remNavController,
-                                currentUserId = userId,
+                                currentUserId = loggedInUserId ?: -1,
                                 viewModel = viewModel(
                                     factory = CoinViewModelFactory(repository, savePointRepository)
                                 )
                             )
                         }
-                    }
-                    composable("addSavePoint") {
-                        ViewCoins(
-                            remNavController,
-                            currentUserId = loggedInUserId ?: -1,
-                            viewModel = viewModel(
-                                factory = CoinViewModelFactory(repository, savePointRepository)
-                            )
-                        )
-                    }
-                    composable("SavePointScreen") {
-                        val userId = loggedInUserId
+                        composable("SavePointScreen") {
+                            val userId = loggedInUserId
 
-                        if(userId != null){
-                            SavePointScreen(
-                                remNavController, viewModel = viewModel(
-                                    factory = SavePointModelFactory(savePointRepository, userId
+                            if(userId != null){
+                                SavePointScreen(
+                                    remNavController, viewModel = viewModel(
+                                        factory = SavePointModelFactory(savePointRepository, userId
+                                    )
                                 )
-                            )
-                            )
+                                )
+                            }
+
                         }
-
                     }
-                }
 
-            }
+                }
         }
+    }
     }
 
 
