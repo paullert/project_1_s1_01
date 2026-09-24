@@ -107,6 +107,8 @@ To get a local copy up and running follow these simple example steps.
 
 Project Link: [https://github.com/paullert/project_1_s1_01](https://github.com/paullert/project_1_s1_01)
 
+Video Presentation: [Drive Link](https://drive.google.com/file/d/1lYW6xCc8fCTQXmYVaAW_qcfWqUul4L_X/view?usp=sharing)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
