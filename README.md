@@ -12,10 +12,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/paullert/project_1_s1_01">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
 <h3 align="center">Crypto Tracker</h3>
 
   <p align="center">
@@ -111,6 +107,8 @@ To get a local copy up and running follow these simple example steps.
 
 Project Link: [https://github.com/paullert/project_1_s1_01](https://github.com/paullert/project_1_s1_01)
 
+Video Presentation: [Drive Link](https://drive.google.com/file/d/1lYW6xCc8fCTQXmYVaAW_qcfWqUul4L_X/view?usp=sharing)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -137,4 +135,4 @@ Project Link: [https://github.com/paullert/project_1_s1_01](https://github.com/p
 [AndroidStudio]: https://img.shields.io/badge/Android%20Studio-000000?style=for-the-badge&logo=androidstudio&logoColor=34a853
 [Compose]: https://img.shields.io/badge/Compose-20232A?style=for-the-badge&logo=jetpackcompose&logoColor=34a853
 [Room3]: https://img.shields.io/badge/Room%203-000000?style=for-the-badge&logo=android&logoColor=34a853
-[SQLite]: https://img.shields.io/badge/sql-ffffff?style=for-the-badge&logo=sqlite&logoColor=044a64
+[SQLite]: https://img.shields.io/badge/sqlite-ffffff?style=for-the-badge&logo=sqlite&logoColor=044a64
