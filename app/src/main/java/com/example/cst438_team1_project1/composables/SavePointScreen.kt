@@ -29,6 +29,10 @@ import com.example.cst438_team1_project1.viewModels.SavePointViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 @Composable
 fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -74,6 +78,7 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
                             savePoint.coinId.toString()
                         }
                     }
+                    val savePointDate = formatUnixTimestamp(savePoint.createdAt)
 
                     Row(
                         modifier = Modifier
@@ -88,6 +93,7 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
                                 fontWeight = FontWeight.Bold
                             )
                             Text(text = "Coin ID: $displayCoinId")
+                            Text(text = "Saved At: $savePointDate")
                             Text(text = "Saved Price: ${formatUsdPrice(savePoint.valueSnapshot)}")
                             Text(text = "Price Now: ${formatUsdPrice(savePointWithCoin.currentPriceSnapshot)}")
                         }
@@ -154,4 +160,9 @@ fun SavePointScreen(navController: NavController, viewModel: SavePointViewModel)
 private fun formatUsdPrice(price: String): String {
     val priceValue = price.toDoubleOrNull() ?: return "Unavailable"
     return NumberFormat.getCurrencyInstance(Locale.US).format(priceValue)
+}
+
+fun formatUnixTimestamp(epochSecond: Long): String {
+    val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a").withZone(ZoneId.systemDefault())
+    return formatter.format(Instant.ofEpochMilli(epochSecond))
 }
