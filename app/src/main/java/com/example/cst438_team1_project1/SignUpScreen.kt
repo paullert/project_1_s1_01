@@ -151,10 +151,14 @@ fun SignUpScreen(navController: NavController) {
                 }
 
                 val newUser = User(username = username, password = pass1)
-                userDao.insertUser(newUser)
+                val userId = userDao.insertUser(newUser)
                 //when trying to insert user it kept crashing had to add KSP to project & add Room 3 compiler
 
-                navController.navigate("ViewCoins") //view coins is now home
+                sessionManager.saveUserId(userId.toInt())
+                navController.navigate("ViewCoins") { //view coins is now home
+                    popUpTo("SignUp") {inclusive = true}
+                }
+
 
                 // Example of how to call the Retrofit API:
                 try {
