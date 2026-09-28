@@ -6,10 +6,12 @@
 - What I built: I built the login page, as well as persistence for the session when a user is logged in.
 
 ## Biggest challenge
-The biggest challenge was learning how to use Android Studio and Composable
+The biggest challenge was learning how to use Android Studio and Composable. I also had to learn how to work around Gradle version issues
+and Kotlin syntax errors.
 
 ## Most valuable thing I learned
-The most valuable thing I learned was being able to review code more thoroughly, which can help me with my own code.
+The most valuable thing I learned was being able to review code more thoroughly. I was able to 
+look through code and see what worked and what seemed like it could cause errors.
 
 ## What I carry into Project 02
 1. Open pull requests earlier - I will know it worked if I don't lose any points because of a late PR.
